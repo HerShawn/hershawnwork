@@ -21,7 +21,7 @@
 %
 
 % 标题，中文
-\ctitle{基于由粗到细的场景文字检测方法研究与应用}
+\ctitle{由粗到细的场景文字检测}
 
 % 作者，中文
 \cauthor{贺翔 }
@@ -30,11 +30,11 @@
 \csubject{软件工程}
 
 % 导师姓名，中文
-\csupervisor{宋永红 \quad 高级工程师}
+\csupervisor{宋永红 }
 
 % 关键词，中文。用全角分号「；」分割
 % 研究生的应首先从《汉语主题词表》中摘选
-\ckeywords{场景文字检测；由粗到细；文字边缘骨架切割；统计边缘响应；二叉树搜索}
+\ckeywords{缺陷检测；显著性检测；深度图像；基准面；图像分割；法向量}
 
 % 提交日期，本科生不需要
 \cproddate{\the\year 年\the\month 月}
@@ -44,19 +44,19 @@
 \ctype{应用研究}
 
 % 论文标题，英文
-\etitle{Research and Application of Coarse-to-fine Scene text detection}
+\etitle{Research of suface defect detection method for continuous casting slab}
 
 % 作者姓名，英文
-\eauthor{Xiang He }
+\eauthor{ }
 
 % 学科，英文，本科生不需要
 \esubject{Software Engineering}
 
 % 导师姓名，英文
-\esupervisor{Senior Engineer Yonghong Song }
+\esupervisor{ }
 
 % 关键词，英文。用半角分号和一个半角空格「; 」分割
-\ekeywords{scene text detection; coarse to fine; text Skeleton-cut; Static skeleton response; Binary tree based Search}
+\ekeywords{defect detection; saliency detection; depth map; datum plane; image segmentation; normal vector}
 
 % 学科门类，英文
 % 从Philosophy（哲学）、Economics（经济学）、Law（法学）、Education（教育学）、Arts（文学）、
