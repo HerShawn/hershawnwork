@@ -29,11 +29,58 @@
     \section{方法原理与步骤}
     \esection{Principle and Summary of The Method}
 
+    基于边缘骨架切割的文字检测子的具体流程如图\ref{fig.c31_overview}所示。首先对于输入的场景文字图片，利用结构化边缘检测方法\cite{Dollar2015Fast}得到输入图片的结构化边缘响应图。然后基于一系列像素强度值阈值，对边缘响应图进行分割，得到相应的二值化边缘图。
+
+    \begin{figure*}[!h]
+    \centering
+    \includegraphics[width=\textwidth]{./figures/c31_overview_1.jpg}
+    \begin{minipage}[t]{0.32\linewidth}
+    \centerline{ \small (a)输入的场景文字图像}
+    \end{minipage}
+    \begin{minipage}[t]{0.32\linewidth}
+    \centerline{ \small (b)场景文字图的边缘响应}
+    \end{minipage}
+    \begin{minipage}[t]{0.32\linewidth}
+    \centerline{ \small (c)场景文字图的边缘骨架}
+    \end{minipage}
+    \includegraphics[width=\textwidth]{./figures/c31_overview_2.jpg}
+    \begin{minipage}[t]{0.32\linewidth}
+    \centerline{ \small (d)边缘骨架切割}
+    \end{minipage}
+    \begin{minipage}[t]{0.32\linewidth}
+    \centerline{ \small (e)非文字边缘骨架图的滤除}
+    \end{minipage}
+    \begin{minipage}[t]{0.32\linewidth}
+    \centerline{ \small (f)文字粗略定位结果}
+    \end{minipage}
+    \caption{基于边缘骨架切割的文字检测方法的流程图}
+    \label{fig.c31_overview}
+    \end{figure*}
+
     \section{文字骨架的提取与切割}
     \esection{Text skeleton's extraction and cutting}
 
         \subsection{文字骨架的生成}
         \esubsection{Text skeleton's construction}
+
+        \begin{figure*}[!h]
+        \centering
+        \includegraphics[width=\textwidth]{./figures/c32_skeleton.jpg}
+        \begin{minipage}[t]{0.24\linewidth}
+        \centerline{\small (a)原图}
+        \end{minipage}
+        \begin{minipage}[t]{0.24\linewidth}
+        \centerline{\small (b)边缘响应}
+        \end{minipage}
+        \begin{minipage}[t]{0.24\linewidth}
+        \centerline{\small(c)边缘二值图}
+        \end{minipage}
+        \begin{minipage}[t]{0.24\linewidth}
+        \centerline{\small (d)边缘骨架图}
+        \end{minipage}
+        \caption{文字边缘骨架生成的流程图}
+        \label{fig.c32_skeleton}
+        \end{figure*}
 
         \subsection{文字骨架粘连点的检测和切割}
         \esubsection{Text adhesion-junctions' detection and cutting}
