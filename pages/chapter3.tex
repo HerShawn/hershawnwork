@@ -29,7 +29,7 @@
     \section{方法原理与步骤}
     \esection{Principle and Summary of The Method}
 
-    基于边缘骨架切割的文字检测子的具体流程如图\ref{fig.c3_overview} 所示。首先对于输入的场景文字图片，利用结构化边缘检测方法\cite{Dollar2015Fast} 得到输入图片的结构化边缘响应图，如图\ref{fig.c3_overview}(b) 所示。然后基于一系列像素强度值阈值，对边缘响应图进行分割，得到相应的二值化边缘图。接着在每个二值边缘图上，通过细化操作得到其边缘骨架图，如图\ref{fig.c3_overview}(c)所示。图中的红色结点是在边缘骨架上，通过8领域内像素点分析所找到的边缘骨架结点。而文字边缘与背景间的粘连点，就存在于这些边缘骨架结点中。
+    基于边缘骨架切割的文字检测子的具体流程如图\ref{fig.c3_overview} 所示。首先对于输入的场景文字图片，利用结构化边缘检测方法\cite{Dollar2015Fast} 得到输入图片的结构化边缘响应图，如图\ref{fig.c3_overview}(b) 所示。然后基于一系列像素强度值阈值，对边缘响应图进行分割，得到相应的二值化边缘图。接着在每个二值边缘图上，通过细化操作得到其边缘骨架图，如图\ref{fig.c3_overview}(c) 所示。图中的红色结点是在边缘骨架上，通过8领域内像素点分析所找到的边缘骨架结点。而文字边缘与背景间的粘连点，就存在于这些边缘骨架结点中。
     为了将文字边缘从背景杂质中切割出来，需要切割开这些边缘骨架结点，以解决文字边缘的粘连问题。而由不同的二值边缘图所生成的边缘骨架图上的结点是不同的。因此选择合适的边缘骨架图上的结点进行切割，是解决文字边缘粘连问题的核心步骤。
 
     \begin{figure*}[htbp]
@@ -47,8 +47,6 @@
     \begin{minipage}[t]{0.22\linewidth}
     \centerline{ \small (d)边缘骨架}
     \end{minipage}
-    \\
-
     \includegraphics[width=\textwidth]{./figures/c3_overview_2.jpg}
     \begin{minipage}[t]{0.22\linewidth}
     \centerline{ \small (e)边缘骨架切割}
@@ -67,7 +65,7 @@
     \end{figure*}
 
     这里通过实验观察可知，那些分割阈值较低所得的二值边缘图所生成的边缘骨架较为杂乱，更可能是无效的边缘骨架，如图\ref{fig.c3_select_skeleton}(a) 所示。
-    因此这里采用欧拉数计算，来从一系列边缘骨架图中选择出最合适的边缘骨架图，欧拉数的计算过程如图\ref{fig.c3_select_skeleton}(b) 所示。在边缘骨架图中，所有的候选边缘骨架都要经过形态学滤除，以过滤掉大部分明显不是文字的边缘骨架。该滤除过程如图\ref{fig.c3_overview}(c)到图\ref{fig.c3_overview}(d)的变化所示。紧接着，剩余的不易区分的非文字边缘骨架，可通过基于CNN的分类器来进一步滤除。该滤除过程如图\ref{fig.c3_overview}(d)到图\ref{fig.c3_overview}(e)所示，红色框中包含的不易区分的非文字边缘骨架，可通过CNN分类器去除掉。最后如图\ref{fig.c3_overview}(f)所示，基于非极大值抑制和文本行聚集操作，得到粗略的文本行定位结果。
+    因此这里采用欧拉数计算，来从一系列边缘骨架图中选择出最合适的边缘骨架图，欧拉数的计算过程如图\ref{fig.c3_select_skeleton}(b) 所示。在边缘骨架图中，所有的候选边缘骨架都要经过形态学滤除，以过滤掉大部分明显不是文字的边缘骨架。该滤除过程如图\ref{fig.c3_overview}(c)到图\ref{fig.c3_overview}(d) 的变化所示。紧接着，剩余的不易区分的非文字边缘骨架，可通过基于CNN的分类器来进一步滤除。该滤除过程如图\ref{fig.c3_overview}(d)到图\ref{fig.c3_overview}(e)所示，红色框中包含的不易区分的非文字边缘骨架，可通过CNN分类器去除掉。最后如图\ref{fig.c3_overview}(f)所示，基于非极大值抑制和文本行聚集操作，得到粗略的文本行定位结果。
 
     \section{文字骨架的提取与切割}
     \esection{Text skeleton's extraction and cutting}
@@ -75,7 +73,26 @@
         \subsection{文字骨架的生成}
         \esubsection{Text skeleton's construction}
 
-        %一系列分割阈值，得到不同的二值边缘图，并生成相应的边缘骨架图；低分割阈值的二值图所生成骨架图较为杂乱，不适合用于后续的边缘骨架切割步骤；这部分内容在supplement上有，将其作图写在skeleton的生成一节中。
+        %一系列分割阈值，得到不同的二值边缘图，并生成相应的边缘骨架图；低分割阈值的二值图所生成骨架图较为杂乱，不适合用于后续的边缘骨架切割步骤；这部分内容在supplement上有，将其作图写在skeleton 的生成一节中。
+
+        在输入的场景文字图像上，通过结构化边缘检测子\cite{Dollar2015Fast}得到了图像的结构化边缘响应图。边缘响应图并不是二值图，其每个位置上的像素点的值代表的是该像素点属于边缘的概率。，如图\ref{fig.c3_overview}(b) 所示，某位置的像素点的值越大，图中该位置的像素点的颜色就越深，说明该位置的像素点越可能位于一条边缘之上。既然边缘响应图是每个位置像素点的值都不尽相同的概率图，为了便于观察，用图\ref{fig.c3_response_to_map}第一行的三维图展示其概率响应。
+
+        \begin{figure*}[htbp]
+        \centering
+        \includegraphics[width=\textwidth]{./figures/c3_edge_response.jpg}
+        \includegraphics[width=\textwidth]{./figures/c3_edge_map.jpg}
+        \begin{minipage}[t]{0.32\linewidth}
+        \centerline{ \small (a)阈值 $t = 0.1$}
+        \end{minipage}
+        \begin{minipage}[t]{0.32\linewidth}
+        \centerline{ \small (b)阈值 $t = 0.3$}
+        \end{minipage}
+        \begin{minipage}[t]{0.32\linewidth}
+        \centerline{ \small (c)阈值 $t = 0.5$}
+        \end{minipage}
+        \caption{在边缘响应图上通过一系列的分割阈值得到相应的边缘二值图}
+        \label{fig.c3_response_to_map}
+        \end{figure*}
 
         \begin{figure*}[htbp]
         \centering
@@ -94,23 +111,6 @@
         \end{minipage}
         \caption{文字边缘骨架生成的流程图}
         \label{fig.c3_skeleton}
-        \end{figure*}
-
-        \begin{figure*}[htbp]
-        \centering
-        \includegraphics[width=\textwidth]{./figures/c3_edge_response.jpg}
-        \includegraphics[width=\textwidth]{./figures/c3_edge_map.jpg}
-        \begin{minipage}[t]{0.32\linewidth}
-        \centerline{ \small (a)阈值 $t = 0.1$}
-        \end{minipage}
-        \begin{minipage}[t]{0.32\linewidth}
-        \centerline{ \small (b)阈值 $t = 0.3$}
-        \end{minipage}
-        \begin{minipage}[t]{0.32\linewidth}
-        \centerline{ \small (c)阈值 $t = 0.5$}
-        \end{minipage}
-        \caption{在边缘响应图上通过一系列的分割阈值得到相应的边缘二值图}
-        \label{fig.c3_response_to_map}
         \end{figure*}
 
         \subsection{文字骨架粘连点的检测和切割}
