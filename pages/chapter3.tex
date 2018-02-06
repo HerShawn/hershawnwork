@@ -208,13 +208,13 @@
         \quad
         \right\}$
 
-        其中，$Q_1$为外角点，$Q_2$为内角点，$Q_3$为交叉点，这些角点在边缘骨架上的位置如图\ref{fig.c3_select_skeleton}(b) 所示。那么欧拉数目的计算可由公式\ref{eq:c3_euler_number}得到：
+        其中，$Q_1$为外角点，$Q_2$为内角点，$Q_3$为交叉点，这些角点在边缘骨架上的位置如图\ref{fig.c3_select_skeleton}(b) 所示。那么欧拉数目的计算可由公式\ref{eq:c3_euler_number} 得到：
 
         \begin{equation}
         \eta=\frac{n(Q_1)-n(Q_2)+2n(Q_3)}{4},
         \label{eq:c3_euler_number}
         \end{equation}
-        
+
         接下来，只有欧拉数和粘连点数最合适的边缘骨架图被保留下来，其它的边缘骨架图全部被删去。通过上述方式选择出来的边缘骨架图，既避免了过高分割阈值下的边缘图所可能生成的碎片和断裂化的边缘骨架，又避免了过低分隔阈值时可能生成的孔洞过多的杂乱边缘骨架，且因为删去了绝大多数无效的候选边缘骨架，而节省了计算量和时间。最后，将最合适的边缘骨架图上的粘连点消除掉，即可以将候选文字边缘骨架从背景中分离出来，以此来解决边缘粘连问题。
 
     \section{非文字骨架的滤除}
@@ -223,8 +223,28 @@
         \subsection{形态学滤除}
         \esubsection{Morphological filtering}
 
+        \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=\textwidth]{c3_skeleton_samples.jpg}
+        \begin{minipage}[t]{0.48\linewidth}
+        \centerline{\small (a)文字边缘骨架}
+        \end{minipage}
+        \begin{minipage}[t]{0.48\linewidth}
+        \centerline{\small (b)非文字边缘骨架}
+        \end{minipage}
+        \includegraphics[width=\textwidth]{c3_concentration_ratio.jpg}
+        \centerline{\small (c) 文字通常比非文字骨架具有更高的聚合度}
+        \caption{文字与非文字边缘骨架的聚合度的比较} \label{fig.c3_concentration_ratio}
+        \end{figure}
+
         \subsection{基于卷积神经网络的滤除}
         \esubsection{convolutional neural network-based filtering}
+
+        \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=\textwidth]{c3_cnn.jpg}
+        \caption{单尺度卷积神经网络分类器的架构} \label{fig.c3_cnn}
+        \end{figure}
 
     \section{文本行生成}
     \esection{Text line's construction}
@@ -235,6 +255,13 @@
         \subsection{文本行的局部迭代优化}
         \esubsection{Text line's iteratively local refinement}
 
+        \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=\textwidth]{c3_iter_local_refine.jpg}
+        \label{fig.c3_iter_local_refine}
+        \caption{局部迭代优化的效果示例}
+        \end{figure}
+
     \section{实验和结果分析}
     \esection{Experimental Results}
 
@@ -243,6 +270,20 @@
 
         \subsection{实验结果与分析}
         \esubsection{Experimental Results and Analysis}
+
+        \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=\textwidth]{c3_ic13_results.jpg}
+        \label{fig.c3_ic13_results}
+        \caption{ICDAR2013上的测试结果示例}
+        \end{figure}
+        
+        \begin{figure}[htbp]
+        \centering
+        \includegraphics[width=\textwidth]{c3_msra_results.jpg}
+        \label{fig.c3_msra_results}
+        \caption{MSRA-TD500上的测试结果示例}
+        \end{figure}
 
     \section{本章小结}
     \esection{Brief Summary}
