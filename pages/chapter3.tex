@@ -178,7 +178,7 @@
         \label{fig.c3_compare_skeleton}
         \end{figure}
 
-        欧拉数是二值图像的拓扑特征，其数值是连通区域数目与孔洞数目的差值。由不同的二值边缘图所生成的边缘骨架图，它们的连通区域数目比较稳定，但是孔洞数目的变化很剧烈。如图\ref{fig.c3_compare_skeleton}所示，过低或过高的分割阈值下的二值边缘图所生成的边缘骨架图的孔洞数与连通区域的数目的差距很大，而正常分割阈值下的边缘骨架图中孔洞数目和连通区域数目的差值则保持在合理范围内。
+        欧拉数是二值图像的拓扑特征，其数值是连通区域数目与孔洞数目的差值。由不同的二值边缘图所生成的边缘骨架图，它们的连通区域数目比较稳定，但是孔洞数目的变化很剧烈。如图\ref{fig.c3_compare_skeleton} 所示，过低或过高的分割阈值下的二值边缘图所生成的边缘骨架图的孔洞数与连通区域的数目的差距很大，而正常分割阈值下的边缘骨架图中孔洞数目和连通区域数目的差值则保持在合理范围内。
 
         1种简单且有效的计算欧拉数的方法是计算$2*2$像素模式的数目，这些像素模式的类型存在以下几类：
 
@@ -190,15 +190,32 @@
         \begin{matrix} 0 & 0 \\ 1 & 0 \end{matrix}
         \quad
         \right\}$
-        
+
         $Q_2 = \left\{
         \quad
-        \begin{matrix} 1 & 0 \\ 0 & 0 \end{matrix}\quad,\quad
-        \begin{matrix} 0 & 1 \\ 0 & 0 \end{matrix}\quad,\quad
-        \begin{matrix} 0 & 0 \\ 0 & 1 \end{matrix}\quad,\quad
-        \begin{matrix} 0 & 0 \\ 1 & 0 \end{matrix}
+        \begin{matrix} 0 & 1 \\ 1 & 1 \end{matrix}\quad,\quad
+        \begin{matrix} 1 & 0 \\ 1 & 1 \end{matrix}\quad,\quad
+        \begin{matrix} 1 & 1 \\ 1 & 0 \end{matrix}\quad,\quad
+        \begin{matrix} 1 & 1 \\ 0 & 1 \end{matrix}
         \quad
         \right\}$
+
+        $Q_3 = \left\{
+        \quad
+        \begin{matrix} 0 & 1 \\ 1 & 0 \end{matrix}\quad,\quad
+        \begin{matrix} 1 & 0 \\ 0 & 1
+        \end{matrix}
+        \quad
+        \right\}$
+
+        其中，$Q_1$为外角点，$Q_2$为内角点，$Q_3$为交叉点，这些角点在边缘骨架上的位置如图\ref{fig.c3_select_skeleton}(b) 所示。那么欧拉数目的计算可由公式\ref{eq:c3_euler_number}得到：
+
+        \begin{equation}
+        \eta=\frac{n(Q_1)-n(Q_2)+2n(Q_3)}{4},
+        \label{eq:c3_euler_number}
+        \end{equation}
+        
+        接下来，只有欧拉数和粘连点数最合适的边缘骨架图被保留下来，其它的边缘骨架图全部被删去。通过上述方式选择出来的边缘骨架图，既避免了过高分割阈值下的边缘图所可能生成的碎片和断裂化的边缘骨架，又避免了过低分隔阈值时可能生成的孔洞过多的杂乱边缘骨架，且因为删去了绝大多数无效的候选边缘骨架，而节省了计算量和时间。最后，将最合适的边缘骨架图上的粘连点消除掉，即可以将候选文字边缘骨架从背景中分离出来，以此来解决边缘粘连问题。
 
     \section{非文字骨架的滤除}
     \esection{Non-text skeleton's filtering}
