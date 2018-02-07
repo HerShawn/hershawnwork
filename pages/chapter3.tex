@@ -242,24 +242,28 @@
         \end{figure}
 
         这些常用的形态学的限制包括：宽高比，离心率，欧拉数，同时在区域和其最小凸多边形中的像素比例，等等。而在本文中，针对文字边缘骨架和非文字边缘骨架的不同，提出一种简单但高效的形态学限制，即边缘骨架的聚合程度。假设给定边缘骨架$skel$，求取该边缘骨架的聚合度的方式如公式\ref{eq:c3_concentration_ratio} 所示：
-        
+
         \begin{equation}
         C(skel)=\frac{length(skel_{ol})}{length(skel)},
         \label{eq:c3_concentration_ratio}
         \end{equation}
-        
+
         其中，$skel_{ol}$是边缘骨架$skel$重叠的部分，即$skel_{ol}=skel(sum_{ver}(skel)>1)$。而$Sum_{ver}(skel)$是按竖直方向将边缘骨架$skel$累加起来，如图\ref{fig.c3_concentration_ratio}(c)所示：红线代表竖直方向累加像素点的个数为1的阈值线，那么超过红线的位部分，表示该位置上存在重叠的边缘骨架$skel_{ol}$，即在$skel_{ol}$中 $Sum_{ver}(skel)>1$。通过对图\ref{fig.c3_concentration_ratio}(c) 的观察，文字边缘骨架绝大部分都是重叠的，也就是$skel_{ol}$的长度占$skel$长度的比率$C(skel)$较大，因此较大的比率$C(skel)$ 表征了文字边缘骨架具有更高的聚合度。与此同时，观察发现非文字边缘骨架只有很小一部分是重叠的，即$skel_{ol}$的长度占$skel$ 长度的比率$C(skel)$很小，所以小$C(skel)$ 表征了非文字边缘骨架的聚合度更小。
-        
+
         通过在第1阶段分类过程中，采用上述的这些简单的形态学限制，包括本文新提出的针对文字边缘骨架特征的聚合度限制，绝大多数非文字的边缘骨架就可以被高效的过滤掉。但是可能存在一些与文字边缘骨架极为相近的非文字边缘骨架没有在形态学过滤阶段被排除。那么这些被遗漏的非文字边缘骨架，就将在后续的第2 阶段分类过程中进行过滤。
 
         \subsection{基于卷积神经网络的滤除}
         \esubsection{convolutional neural network-based filtering}
+        
+        第2阶段的分类过程是更为精细的分类操作。受Wang等\cite{Wang2012End}提出的利用卷积神经网络(CNN)作端对端文字识别方法的启发，在精细分类阶段我们提出一种基于CNN的文字边缘骨架分类器，用于滤除掉遗漏下来的非文字边缘骨架。这个基于CNN的边缘骨架分类器的架构如图\ref{fig.c3_cnn}所示，其网络结构是由2个卷积层，分别后接2个池化层，最后连1 个全连接层构成。其中第1个卷积层有$n_1 = 64$个卷积模板，第2个卷积层有$n_2 = 128$ 个卷积模板。全连接层后接2个类别，分别为文字边缘和非文字边缘类别。2 类中置信度更高的类别即为分类判别结果。
 
         \begin{figure}[htbp]
         \centering
         \includegraphics[width=\textwidth]{c3_cnn.jpg}
         \caption{单尺度卷积神经网络分类器的架构} \label{fig.c3_cnn}
         \end{figure}
+        
+        这个CNN网络结构的输入是例如图\ref{fig.c3_cnn}中最左边的小图块。这些小图块，是由经过第1阶段分类后被判别为候选文字边缘骨架的包围框，在原图上截取下来的小图块组成。在训练阶段，将这些图块的大小调整成$32 \times 32$个像素大小的训练样本，输入到CNN网络中。然后在第1个卷积层中，得到$25 \times 25 \times n_1$个卷积响应。接着在平均池化层，将响应的维度缩减到$5 \times 5 \times n_1$。类似地，在第
 
     \section{文本行生成}
     \esection{Text line's construction}
