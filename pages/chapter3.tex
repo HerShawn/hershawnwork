@@ -65,7 +65,7 @@
     \end{figure*}
 
     这里通过实验观察可知，那些分割阈值较低所得的二值边缘图所生成的边缘骨架较为杂乱，更可能是无效的边缘骨架，如图\ref{fig.c3_select_skeleton}(a) 所示。
-    因此这里采用欧拉数计算，来从一系列边缘骨架图中选择出最合适的边缘骨架图，欧拉数的计算过程如图\ref{fig.c3_select_skeleton}(b) 所示。在边缘骨架图中，所有的候选边缘骨架都要经过形态学滤除，以过滤掉大部分明显不是文字的边缘骨架。该滤除过程如图\ref{fig.c3_overview}(c) 到图\ref{fig.c3_overview}(d) 的变化所示。紧接着，剩余的不易区分的非文字边缘骨架，可通过基于CNN的分类器来进一步滤除。该滤除过程如图\ref{fig.c3_overview}(d) 到图\ref{fig.c3_overview}(e) 所示，红色框中包含的不易区分的非文字边缘骨架，可通过CNN 分类器去除掉。最后如图\ref{fig.c3_overview}(f) 所示，基于非极大值抑制和文本行聚集操作，得到粗略的文本行定位结果。
+    因此这里采用欧拉数计算，来从一系列边缘骨架图中选择出最合适的边缘骨架图，欧拉数的计算过程如图\ref{fig.c3_select_skeleton}(b) 所示。在边缘骨架图中，所有的候选边缘骨架都要经过形态学滤除，以过滤掉大部分明显不是文字的边缘骨架。该滤除过程如图\ref{fig.c3_overview}(c) 到图\ref{fig.c3_overview}(d) 的变化所示。紧接着，剩余的不易区分的非文字边缘骨架，可通过基于CNN 的分类器来进一步滤除。该滤除过程如图\ref{fig.c3_overview}(d) 到图\ref{fig.c3_overview}(e) 所示，红色框中包含的不易区分的非文字边缘骨架，可通过CNN 分类器去除掉。最后如图\ref{fig.c3_overview}(f) 所示，基于非极大值抑制和文本行聚集操作，得到粗略的文本行定位结果。
 
     \section{文字骨架的提取与切割}
     \esection{Text skeleton's extraction and cutting}
@@ -97,7 +97,7 @@
         \label{fig.c3_response_to_map}
         \end{figure*}
 
-        因此，分割阈值不同，从边缘响应图上分割得到的二值边缘图也不同。较高阈值下的边缘图保留了更多的边缘信息，但更难区别文字与非文字边缘。较低阈值的边缘图去除了非文字边缘信息，但边缘更不清晰。不同于Canny算子\cite{Ding2001On} 等固定阈值的边缘二值图检测方法，本文采用递增的分割阈值从边缘响应图中得到一系列候选边缘二值图，然后从中自适应地选择出最合适的二值边缘图进行后续处理。自适应选择最优二值边缘图的内容会在\ref{sec.c3_skeleton_cut} 节中详细阐述。
+        因此，分割阈值不同，从边缘响应图上分割得到的二值边缘图也不同。较高阈值下的边缘图保留了更多的边缘信息，但更难区别文字与非文字边缘。较低阈值的边缘图去除了非文字边缘信息，但边缘更不清晰。不同于Canny 算子\cite{Ding2001On} 等固定阈值的边缘二值图检测方法，本文采用递增的分割阈值从边缘响应图中得到一系列候选边缘二值图，然后从中自适应地选择出最合适的二值边缘图进行后续处理。自适应选择最优二值边缘图的内容会在\ref{sec.c3_skeleton_cut} 节中详细阐述。
 
         接下来利用8连通区域细化方法\cite{Lam2002Thinning} 在二值边缘图上提取边缘的骨架线。该细化方法会一直重复迭代操作，直到图像不再发生变化。每次迭代操作包含2个子迭代操作：在第1个子迭代操作中，当且仅当条件 $G_1$, $G_2$ 和 $G_3$全部满足时，二值边缘上的像素点$p$ 将被消除。而在第2个子迭代操作中，当且仅当条件$G_1$, $G_2$ 和 $G_3$$'$ 全部满足时，二值边缘上的像素点$p$ 将被消除。这些细化操作的条件如下所示：
 
@@ -208,7 +208,7 @@
         \quad
         \right\}$
 
-        其中，$Q_1$为外角点，$Q_2$为内角点，$Q_3$为交叉点，这些角点在边缘骨架上的位置如图\ref{fig.c3_select_skeleton}(b) 所示。那么欧拉数目的计算可由公式\ref{eq:c3_euler_number} 得到：
+        其中，$Q_1$为外角点，$Q_2$ 为内角点，$Q_3$为交叉点，这些角点在边缘骨架上的位置如图\ref{fig.c3_select_skeleton}(b) 所示。那么欧拉数目的计算可由公式\ref{eq:c3_euler_number} 得到：
 
         \begin{equation}
         \eta=\frac{n(Q_1)-n(Q_2)+2n(Q_3)}{4},
@@ -220,8 +220,12 @@
     \section{非文字骨架的滤除}
     \esection{Non-text skeleton's filtering}
 
+    在\ref{sec.c3_skeleton}节中，我们论述了边缘骨架的生成方法，而在\ref{sec.c3_skeleton_cut}节阐明了从背景中分隔出候选文字边缘骨架的具体步骤。目前，所有候选文字边缘骨架与非文字的边缘骨架之间的粘连点已经断裂开来，因此边缘粘连问题被解决了。但是在这些候选的边缘骨架中，还混杂有一些非文字的边缘骨架，需要被分类判别出来并清楚掉。所以在本节，提出1 个两阶段的文字边缘骨架分类方法，用以滤除掉混杂在文字边缘骨架中的非文字边缘骨架杂质。
+
         \subsection{形态学滤除}
         \esubsection{Morphological filtering}
+
+        第1阶段的分类方法是形态学滤除。首先，从图\ref{fig.c3_compare_skeleton}(a) 和图\ref{fig.c3_compare_skeleton}(b) 的对比中，我们可以分析出文字边缘骨架和非文字边缘骨架之间在形态上的不同：背景边缘骨架比较直且分散，而文字边缘骨架则相对而言弯曲且聚合在一起。基于这一观察，大量的非文字边缘骨架就可以通过一些形态学的限制来过滤掉。
 
         \begin{figure}[htbp]
         \centering
@@ -236,6 +240,15 @@
         \centerline{\small (c) 文字通常比非文字骨架具有更高的聚合度}
         \caption{文字与非文字边缘骨架的聚合度的比较} \label{fig.c3_concentration_ratio}
         \end{figure}
+
+        这些常用的形态学的限制包括：宽高比，离心率，欧拉数，同时在区域和其最小凸多边形中的像素比例，等等。而在本文中，针对文字边缘骨架和非文字边缘骨架的不同，提出一种简单但高效的形态学限制，即边缘骨架的聚合程度。假设给定边缘骨架$skel$，求取该边缘骨架的聚合度的方式如公式\ref{eq:c3_concentration_ratio} 所示：
+        
+        \begin{equation}
+        C(skel)=\frac{length(skel_{ol})}{length(skel)},
+        \label{eq:c3_concentration_ratio}
+        \end{equation}
+        
+        其中，
 
         \subsection{基于卷积神经网络的滤除}
         \esubsection{convolutional neural network-based filtering}
@@ -275,14 +288,14 @@
         \centering
         \includegraphics[width=\textwidth]{c3_ic13_results.jpg}
         \label{fig.c3_ic13_results}
-        \caption{ICDAR2013上的测试结果示例}
+        \caption{ICDAR2013 上的测试结果示例}
         \end{figure}
-        
+
         \begin{figure}[htbp]
         \centering
         \includegraphics[width=\textwidth]{c3_msra_results.jpg}
         \label{fig.c3_msra_results}
-        \caption{MSRA-TD500上的测试结果示例}
+        \caption{MSRA-TD500 上的测试结果示例}
         \end{figure}
 
     \section{本章小结}
