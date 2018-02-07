@@ -248,7 +248,9 @@
         \label{eq:c3_concentration_ratio}
         \end{equation}
         
-        其中，
+        其中，$skel_{ol}$是边缘骨架$skel$重叠的部分，即$skel_{ol}=skel(sum_{ver}(skel)>1)$。而$Sum_{ver}(skel)$是按竖直方向将边缘骨架$skel$累加起来，如图\ref{fig.c3_concentration_ratio}(c)所示：红线代表竖直方向累加像素点的个数为1的阈值线，那么超过红线的位部分，表示该位置上存在重叠的边缘骨架$skel_{ol}$，即在$skel_{ol}$中 $Sum_{ver}(skel)>1$。通过对图\ref{fig.c3_concentration_ratio}(c) 的观察，文字边缘骨架绝大部分都是重叠的，也就是$skel_{ol}$的长度占$skel$长度的比率$C(skel)$较大，因此较大的比率$C(skel)$ 表征了文字边缘骨架具有更高的聚合度。与此同时，观察发现非文字边缘骨架只有很小一部分是重叠的，即$skel_{ol}$的长度占$skel$ 长度的比率$C(skel)$很小，所以小$C(skel)$ 表征了非文字边缘骨架的聚合度更小。
+        
+        通过在第1阶段分类过程中，采用上述的这些简单的形态学限制，包括本文新提出的针对文字边缘骨架特征的聚合度限制，绝大多数非文字的边缘骨架就可以被高效的过滤掉。但是可能存在一些与文字边缘骨架极为相近的非文字边缘骨架没有在形态学过滤阶段被排除。那么这些被遗漏的非文字边缘骨架，就将在后续的第2 阶段分类过程中进行过滤。
 
         \subsection{基于卷积神经网络的滤除}
         \esubsection{convolutional neural network-based filtering}
