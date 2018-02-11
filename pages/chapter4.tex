@@ -36,9 +36,9 @@
 
         \subsection{统计边缘响应}
         \esubsection{Static Skeleton Response}
-        
+
         首先提出统计边缘响应方法，用以增强文本与背景之间的响应强度差异。给定如图\ref{fig.c4_static_skeleton_response}(a) 所示的场景文字图像$g$，计算其统计边缘响应$s$ 的方式如算法\ref{alg:c4_static_skeleton_response} 所示：
-        
+
         \begin{algorithm} \renewcommand{\algorithmicrequire}{\textbf{输入:}}	\renewcommand{\algorithmicensure}{\textbf{输出:}}
     	\caption{统计边缘响应}
     	\label{alg:c4_static_skeleton_response}
@@ -52,9 +52,9 @@
             \UNTIL{$B=\varnothing$}
     	\end{algorithmic}
         \end{algorithm}
-        
-        其中$rs$指代的是响应小块，它的底面积是1个定位包围框$b$，而高是$b$对应的置信度分数$c$。将所有的这些响应小块$rs$堆叠在一起，就构成了如图\ref{fig.c4_static_skeleton_response}(b)所示的统计边缘响应$s$。
-        
+
+        其中$rs$指代的是响应小块，它的底面积是1个定位包围框$b$，而高是$b$对应的置信度分数$c$。将所有的这些响应小块$rs$堆叠在一起，就构成了如图\ref{fig.c4_static_skeleton_response}(b) 所示的统计边缘响应$s$。
+
         \begin{figure}[htbp]
         \begin{minipage}[t]{0.37\linewidth}
         \centering
@@ -74,18 +74,38 @@
         \caption{在统计边缘响应中，文本区域与背景可以被区分开；而且通过后续的对统计边缘响应的水平映射操作，文本行也可以进一步区分开彼此}
         \label{fig.c4_static_skeleton_response}
         \end{figure}
-        
-        为了后续提取候选文本行的操作，首先要利用公式\ref{eq:c4_horizontal_projection} 来计算统计边缘响应$s$的水平映射$hp$，如图\ref{fig.c4_static_skeleton_response}(c)所示。
+
+        为了后续提取候选文本行的操作，首先要利用公式\ref{eq:c4_horizontal_projection} 来计算统计边缘响应$s$的水平映射$hp$，如图\ref{fig.c4_static_skeleton_response}(c) 所示。
 
         \begin{equation}
         hp= \left\{ \sum_{j=1}^w s_{ij} \, | \, i=1,2,...,h;j=1,2,...,w \right\},
         \label{eq:c4_horizontal_projection}
         \end{equation}
-        
+
         其中，$h,w$分别是统计边缘响应$s$的高度和宽度。
 
         \subsection{候选文字行的生成}
         \esubsection{Text line's construction}
+
+        \begin{figure}[htbp]
+        \begin{minipage}[t]{0.32\linewidth}
+        \centering
+        \includegraphics[width=\textwidth]{./figures/c4_gradient.jpg}
+        \centerline{\small (a)在水平映射图上的梯度}
+        \end{minipage}
+        \begin{minipage}[t]{0.32\linewidth}
+        \centering
+        \includegraphics[width=\textwidth]{./figures/c4_unified.jpg}
+        \centerline{\small (b)梯度的取正和统一坐标}
+        \end{minipage}
+        \begin{minipage}[t]{0.32\linewidth}
+        \centering
+        \includegraphics[width=\textwidth]{./figures/c4_nms.jpg}
+        \centerline{\small (c)梯度的非极大值抑制}
+        \end{minipage}
+        \caption{通过梯度计算和非极大值抑制操作来粗略定位文本行}
+        \label{fig.c4_candidate_line_construction}
+        \end{figure}
 
     \section{二叉树型的文字行搜索空间的构建}
     \esection{Binary Tree-based search space's construction}
