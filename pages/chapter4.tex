@@ -29,11 +29,60 @@
     \section{方法原理与步骤}
     \esection{Principle and Summary of The Method}
 
+
+
     \section{候选文字行的提取}
     \esection{Candidate text line's extraction}
 
         \subsection{统计边缘响应}
         \esubsection{Static Skeleton Response}
+        
+        首先提出统计边缘响应方法，用以增强文本与背景之间的响应强度差异。给定如图\ref{fig.c4_static_skeleton_response}(a) 所示的场景文字图像$g$，计算其统计边缘响应$s$ 的方式如算法\ref{alg:c4_static_skeleton_response} 所示：
+        
+        \begin{algorithm} \renewcommand{\algorithmicrequire}{\textbf{输入:}}	\renewcommand{\algorithmicensure}{\textbf{输出:}}
+    	\caption{统计边缘响应}
+    	\label{alg:c4_static_skeleton_response}
+    	\begin{algorithmic}[1]
+    		\REQUIRE 输入的场景文字图像$g$
+    		\ENSURE 图$g$相对应的统计边缘响应$s$
+            \STATE 在图$g$上利用基于边缘骨架切割的文字检测子得到粗略的定位结果：文字定位包围框集合$B$及其相应的置信度分数集合$C$
+    		\REPEAT
+            \STATE $rs:=\left\{ b \times c  |\,b \in B, c \in C\right\}$
+            \STATE $s:=s\cup rs,B:=B / b,C:=C / c$
+            \UNTIL{$B=\varnothing$}
+    	\end{algorithmic}
+        \end{algorithm}
+        
+        其中$rs$指代的是响应小块，它的底面积是1个定位包围框$b$，而高是$b$对应的置信度分数$c$。将所有的这些响应小块$rs$堆叠在一起，就构成了如图\ref{fig.c4_static_skeleton_response}(b)所示的统计边缘响应$s$。
+        
+        \begin{figure}[htbp]
+        \begin{minipage}[t]{0.37\linewidth}
+        \centering
+        \includegraphics[width=\textwidth]{./figures/c4_img.jpg}
+        \centerline{\small (a)粗略定位结果}
+        \end{minipage}
+        \begin{minipage}[t]{0.35\linewidth}
+        \centering
+        \includegraphics[width=\textwidth]{./figures/c4_static_skeleton_response.jpg}
+        \centerline{\small (b)统计边缘响应}
+        \end{minipage}
+        \begin{minipage}[t]{0.25\linewidth}
+        \centering
+        \includegraphics[width=\textwidth]{./figures/c4_horizontal_projection.jpg}
+        \centerline{\small (c)水平方向的映射}
+        \end{minipage}
+        \caption{在统计边缘响应中，文本区域与背景可以被区分开；而且通过后续的对统计边缘响应的水平映射操作，文本行也可以进一步区分开彼此}
+        \label{fig.c4_static_skeleton_response}
+        \end{figure}
+        
+        为了后续提取候选文本行的操作，首先要利用公式\ref{eq:c4_horizontal_projection} 来计算统计边缘响应$s$的水平映射$hp$，如图\ref{fig.c4_static_skeleton_response}(c)所示。
+
+        \begin{equation}
+        hp= \left\{ \sum_{j=1}^w s_{ij} \, | \, i=1,2,...,h;j=1,2,...,w \right\},
+        \label{eq:c4_horizontal_projection}
+        \end{equation}
+        
+        其中，$h,w$分别是统计边缘响应$s$的高度和宽度。
 
         \subsection{候选文字行的生成}
         \esubsection{Text line's construction}
