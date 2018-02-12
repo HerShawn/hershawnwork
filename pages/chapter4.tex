@@ -75,7 +75,7 @@
         \label{fig.c4_static_skeleton_response}
         \end{figure}
 
-        为了后续提取候选文本行的操作，首先要利用公式\ref{eq:c4_horizontal_projection} 来计算统计边缘响应$s$的水平映射$hp$，如图\ref{fig.c4_static_skeleton_response}(c) 所示。
+        为了后续提取候选文本行的操作，首先要利用公式\ref{eq:c4_horizontal_projection} 来计算统计边缘响应$s$的横向投影$hp$，如图\ref{fig.c4_static_skeleton_response}(c) 所示。
 
         \begin{equation}
         hp= \left\{ \sum_{j=1}^w s_{ij} \, | \, i=1,2,...,h;j=1,2,...,w \right\},
@@ -86,6 +86,8 @@
 
         \subsection{候选文字行的生成}
         \esubsection{Text line's construction}
+
+        在上1小节中得到了统计边缘响应$s$的横向投影$hp$,它的数值如图\ref{fig.c4_candidate_line_construction}(a) 中的蓝色曲线所示，从中可看出候选文本行之间的响应有着明显的起伏变化。
 
         \begin{figure}[htbp]
         \begin{minipage}[t]{0.32\linewidth}
@@ -106,6 +108,10 @@
         \caption{通过梯度计算和非极大值抑制操作来粗略定位文本行}
         \label{fig.c4_candidate_line_construction}
         \end{figure}
+
+        为了确定候选文本行之间的分界线的具体位置，我们在统计边缘响应的横向投影$hp$上计算其梯度$g$,如图\ref{fig.c4_candidate_line_construction}(a) 中的脉冲状红线所示。梯度$g$表征着响应$hp$在某1 竖直位置上的变化程度：梯度$g$中的某1 脉冲状红线$l$的长度越大，就表明在红线$l$的附近越有可能存在着文字区域与背景区域之间的边界。而在梯度$g$中不存在脉冲红线的地方，意味着在这些区域的响应并没有发生突变，因此在$hp$上这些对应的位置上不存在文字区域与背景区域间的边界。
+
+        为了便于观察和分析，首先对梯度值$g$取正，并将其提高至与$hp$统一的坐标内，如图\ref{fig.c4_candidate_line_construction}(b)所示，这时得到的梯度值是$g$$'$。最后在梯度值$g$$'$上执行非极大值抑制操作，由此消除掉绝大部分较小梯度值的无效脉冲状红线，并得到候选文本行集合$L$，如图\ref{fig.c4_candidate_line_construction}(c)中的红色候选文本行分割线所示。
 
     \section{二叉树型的文字行搜索空间的构建}
     \esection{Binary Tree-based search space's construction}
