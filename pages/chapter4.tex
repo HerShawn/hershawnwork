@@ -82,12 +82,12 @@
         \label{eq:c4_horizontal_projection}
         \end{equation}
 
-        其中，$h,w$分别是统计边缘响应$s$的高度和宽度。
+        其中，$h,w$分别是统计边缘响应$s$ 的高度和宽度。
 
         \subsection{候选文字行的生成}
         \esubsection{Text line's construction}
 
-        在上1小节中得到了统计边缘响应$s$的横向投影$hp$,它的数值如图\ref{fig.c4_candidate_line_construction}(a) 中的蓝色曲线所示，从中可看出候选文本行之间的响应有着明显的起伏变化。
+        在上1小节中得到了统计边缘响应$s$ 的横向投影$hp$,它的数值如图\ref{fig.c4_candidate_line_construction}(a) 中的蓝色曲线所示，从中可看出候选文本行之间的响应有着明显的起伏变化。
 
         \begin{figure}[htbp]
         \begin{minipage}[t]{0.32\linewidth}
@@ -111,12 +111,12 @@
 
         为了确定候选文本行之间的分界线的具体位置，我们在统计边缘响应的横向投影$hp$上计算其梯度$g$,如图\ref{fig.c4_candidate_line_construction}(a) 中的脉冲状红线所示。梯度$g$表征着响应$hp$在某1 竖直位置上的变化程度：梯度$g$ 中的某1 脉冲状红线$l$的长度越大，就表明在红线$l$的附近越有可能存在着文字区域与背景区域之间的边界。而在梯度$g$中不存在脉冲红线的地方，意味着在这些区域的响应并没有发生突变，因此在$hp$上这些对应的位置上不存在文字区域与背景区域间的边界。
 
-        为了便于观察和分析，首先对梯度值$g$取正，并将其提高至与$hp$统一的坐标内，如图\ref{fig.c4_candidate_line_construction}(b) 所示，这时得到的梯度值是$g$$'$。最后在梯度值$g$$'$上执行非极大值抑制操作，由此消除掉绝大部分较小梯度值的无效脉冲状红线，并得到候选文本行集合$L$，而$L$由如图\ref{fig.c4_candidate_line_construction}(c) 中的$m$条红色候选文本行分割线组成。
+        为了便于观察和分析，首先对梯度值$g$取正，并将其提高至与$hp$统一的坐标内，如图\ref{fig.c4_candidate_line_construction}(b) 所示，这时得到的梯度值是$g$$'$。 最后在梯度值$g$$'$上执行非极大值抑制操作，由此消除掉绝大部分较小梯度值的无效脉冲状红线，并得到候选文本行集合$L$，而$L$由如图\ref{fig.c4_candidate_line_construction}(c) 中的$m$条红色候选文本行分割线组成。
 
     \section{二叉树型的文字行搜索空间的构建}
     \esection{Binary Tree-based search space's construction}
 
-    将候选文本行集合$L$展现在场景文字原图上，如图\ref{fig.c4_binary_tree_construction}(b)所示。$L$由$m$ 条红线$l_i, i=1,2,...,m$构成，这些红线是候选文本行分割线，并且在场景文字原图上分割出$m+1$个候选文本行条带，而这些文本行条带就是任两个相邻红线$l_i$和$l_{i+1}$之间的图像区域。那么现阶段的任务是，将所有候选文本行条带区域的排练组合作为1个搜索空间，然后从中搜寻出最优的文本行条带组合，而这些条带区域能恰如其分地覆盖住文字所在的图像区域。
+    将候选文本行集合$L$展现在场景文字原图上，如图\ref{fig.c4_binary_tree_construction}(b) 所示。$L$由$m$ 条红线$l_i, i=1,2,...,m$构成，这些红线是候选文本行分割线，并且在场景文字原图上分割出$m+1$个候选文本行条带，而这些文本行条带就是任两个相邻红线$l_i$和$l_{i+1}$之间的图像区域。那么现阶段的任务是，将所有候选文本行条带区域的排练组合作为1个搜索空间，然后从中搜寻出最优的文本行条带组合，而这些条带区域能恰如其分地覆盖住文字所在的图像区域。
 
     \begin{figure}[htbp]
     \centering
@@ -130,8 +130,41 @@
     \caption{从候选文本行中建立起代表搜索空间的二叉树型数据结构}
     \label{fig.c4_binary_tree_construction}
     \end{figure}
+
+    假设红色分割线$l_i$有2个属性：距离$ld_i$和置信度$lc_i$。其中属性$ld_i$ 指代的是从图像顶部到分割线$l_i$ 位置的距离，例如在图\ref{fig.c4_binary_tree_construction}(b) 中，$ld_3=331_{px}$就是指从图像顶部到线$l_3$的距离有331个像素大小。而$lc_i$是分割线$l_i$的置信度，其数值是由$l_i$的梯度值归一化得到的，例如在图\ref{fig.c4_binary_tree_construction}(b) 中，$lc_3=0.987$表征的是$l_3$是文本行之间分割边界的可能性非常大。
+
+    然后假设我们要构建的二叉树型搜索空间$N$是由一些结点$n$ 构成的。其中任一结点$n_i$有2个对应的属性：结点代表的图像区域范围$nr_i$，以及结点的数值$nv_i$。以图\ref{fig.c4_binary_tree_construction}(a) 为例，节点$n_5$ 所代表的文本行区域范围是从线$l_3$到$l_5$之间的区域，而$n_5$的值是由$l_4$ 的置信度值$lc_4$ 赋予的。
+
+    在明确候选文本行分割线$L$，以及二叉树型搜索空间$N$中各变量的含义后，由$L$构建$N$的过程如算法\ref{alg:c4_build_binary_tree} 所示：
+
+    \begin{algorithm}
+	\renewcommand{\algorithmicrequire}{\textbf{输入:}}
+	\renewcommand{\algorithmicensure}{\textbf{输出:}}
+	\caption{递归地建立二叉树型搜索空间}
+	\label{alg:c4_build_binary_tree}
+	\begin{algorithmic}[1]
+		\REQUIRE 分割线 $L$ 的距离 $LD=\left\{ld_1,ld_2,...,ld_m\right\}$ 和置信度$LC=\left\{lc_1,lc_2,...,lc_m\right\}$
+		\ENSURE 二叉树型搜索空间 $N$ 的结点范围 $NR=\left\{nr_1,nr_2,...,nr_{2m-3}\right\}$, 和结点的值 $NV=\left\{nv_1,nv_2,...,nv_{2m-3}\right\}$
+      \STATE 初始化: \\
+      \STATE \quad $i=0, \quad BuildBinaryTree(i,LD,LC)$
+      \STATE function $BuildBinaryTree(i,LD,LC)$
+        \\\STATE \quad $i=i+1$
+        \\\STATE \quad $if \quad length(LD)==2 \quad then$
+        \\\STATE \qquad $nr_{i}=[LD[1],LD[2]], nv_{i}=0$
+        \\\STATE \qquad $return$
+        \\\STATE \quad $end \ if$
+        \\\STATE \quad $nr_{i}=[LD[1],LD[end]], nv_{i}=max(LC)$
+        \\\STATE \quad $//$假设$LC$中的最大值是$lc_t$，其中$t$是$lc_t$ 的索引
+        \\\STATE \quad $//$在索引$t$处将$L$分裂成左子集和右子集
+        \\\STATE \quad $LD_{l}=\left\{LD[1],...,LD[t]\right\}, LC_{l}=\left\{LC[1],...,LC[t]\right\}$
+        \\\STATE \quad $BuildBinaryTree(i,LD_{l},LC_{l})$
+        \\\STATE \quad $LD_{r}=\left\{LD[t],...,LD[end]\right\}, LC_{r}=\left\{LC[t],...,LC[end]\right\}$
+        \\\STATE \quad $BuildBinaryTree(i,LD_{r},LC_{r})$
+      \STATE end function
+	\end{algorithmic}
+    \end{algorithm}
     
-    
+    那么，通过算法\ref{alg:c4_build_binary_tree}从$L$中构建好的二叉树型搜索空间$N$就将存储在如图中的表格内。下一节，将介绍从搜索空间$N$中搜寻出最优文本行定位的搜索策略。
 
     \section{搜索最优的文字行定位}
     \esection{Searching the optimal text detection}
