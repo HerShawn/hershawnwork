@@ -55,7 +55,7 @@
 
         其中$rs$指代的是响应小块，它的底面积是1 个定位包围框$b$，而高是$b$对应的置信度分数$c$。将所有的这些响应小块$rs$堆叠在一起，就构成了如图\ref{fig.c4_static_skeleton_response}(b) 所示的统计边缘响应$s$。
 
-        \begin{figure}[htbp]
+        \begin{figure}[!h]
         \begin{minipage}[t]{0.37\linewidth}
         \centering
         \includegraphics[width=\textwidth]{./figures/c4_img.jpg}
@@ -89,7 +89,7 @@
 
         在上1小节中得到了统计边缘响应$s$ 的横向投影$hp$, 它的数值如图\ref{fig.c4_candidate_line_construction}(a) 中的蓝色曲线所示，从中可看出候选文本行之间的响应有着明显的起伏变化。
 
-        \begin{figure}[htbp]
+        \begin{figure}[!h]
         \begin{minipage}[t]{0.32\linewidth}
         \centering
         \includegraphics[width=\textwidth]{./figures/c4_gradient.jpg}
@@ -118,7 +118,7 @@
 
     将候选文本行集合$L$展现在场景文字原图上，如图\ref{fig.c4_binary_tree_construction}(b) 所示。$L$由$m$ 条红线$l_i, i=1,2,...,m$ 构成，这些红线是候选文本行分割线，并且在场景文字原图上分割出$m+1$个候选文本行条带，而这些文本行条带就是任两个相邻红线$l_i$和$l_{i+1}$ 之间的图像区域。那么现阶段的任务是，将所有候选文本行条带区域的排练组合作为1 个搜索空间，然后从中搜寻出最优的文本行条带组合，而这些条带区域能恰如其分地覆盖住文字所在的图像区域。
 
-    \begin{figure}[htbp]
+    \begin{figure}[!h]
     \centering
     \includegraphics[width=\textwidth]{./figures/c4_binary_tree_construction.jpg}
     \begin{minipage}[t]{0.40\linewidth}
@@ -211,7 +211,7 @@
 
         以上过程是算法\ref{alg:c4_binary_tree_search}的第i 次迭代。那么经过$(m-1)/2$次迭代后，包含$(m-1)/2$个三元组$p$的路径集合$P$就被构建了出来。
 
-        \begin{figure}[htbp]
+        \begin{figure}[!h]
         \centering
         \includegraphics[width=\textwidth]{./figures/c4_bianry_tree_search.jpg}
         \begin{minipage}[t]{0.33\linewidth}
@@ -232,17 +232,17 @@
         \subsection{搜索策略}
         \esubsection{Searching strategies}
 
-        得到路径集合$P$后，在$P$上执行搜索策略，以得到最优的文本行定位。以图\ref{fig.c4_search_strategy}(a) 中的1个被搜索到的路径三元组$p_1$为例，$p_1=\left\{np_1,nl_1,nr_1\right\}=\left\{n_6,n_7,n_5\right\}$。 那么对$p_1$的决策将在下列的3项策略中选出并仅选出1种：
-        
-        （1）保留父亲结点$n_6$所代表的融合的文本行区域，而剪掉子结点$n_7$和$n_5$各自所代表的分离的文本行区域；
-        
-        （2）仅保留子结点$n_7$所代表的那部分单独的文本行区域，而剪掉父亲结点$n_6$所代表的融合的文本行区域以及子结点$n_5$所代表的单独的文本行区域；
-        
-        （2）仅保留子结点$n_5$所代表的那部分单独的文本行区域，而剪掉父亲结点$n_6$所代表的融合的文本行区域以及子结点$n_7$所代表的单独的文本行区域；
-        
+        得到路径集合$P$后，在$P$上执行搜索策略，以得到最优的文本行定位。以图\ref{fig.c4_search_strategy}(a) 中的1个被搜索到的路径三元组$p_i$为例，$p_i=\left\{np_i,nl_i,nr_i\right\}=\left\{n_5,n_6,n_7\right\}$。 那么对$p_1$的决策将在下列的3项策略中选出并仅选出1种：
+
+        （1）保留父亲结点$n_5$所代表的融合的文本行区域，而剪掉子结点$n_6$和$n_7$各自所代表的分离的文本行区域；
+
+        （2）仅保留子结点$n_7$所代表的那部分单独的文本行区域，而剪掉父亲结点$n_5$所代表的融合的文本行区域以及子结点$n_6$所代表的单独的文本行区域；
+
+        （2）仅保留子结点$n_6$所代表的那部分单独的文本行区域，而剪掉父亲结点$n_5$所代表的融合的文本行区域以及子结点$n_7$所代表的单独的文本行区域；
+
         对上述3种策略的选择过程是基于\ref{fig.c4_search_strategy}(b)所示的2阶段的判别步骤，而判别的依据是结点$n_6,n_7$以及$n_5$的识别成绩高低。这里采用的识别模型是Jaderberg等\cite{Jaderberg2016Reading}的深度学习文字识别网络。我们按照结点的范围区域$nr$来截取出包含候选文本行的图块，将其输入文字识别网络，以得到该结点所代表文本行区域的识别成绩，并将其赋予结点的值$nv$。
 
-        \begin{figure}[htbp]
+        \begin{figure}[!h]
         \centering
         \includegraphics[width=\textwidth]{./figures/c4_search_strategy1.jpg}
         \centerline{\small (a) 1个被搜索到的路径三元组：其中每个结点代表1个候选文本行区域 }
@@ -251,8 +251,10 @@
         \caption{ 1个搜索策略的示例}
         \label{fig.c4_search_strategy}
         \end{figure}
+
+        具体的2阶段判决过程如图\ref{fig.c4_search_strategy}(b) 所示：首先在第1阶段的判断过程中，结点$n_i$所代表的文字行区域要根据该结点的识别成绩值$nv$来进行而分类：如果$nv_i>0$，那么结点$n_i$所代表的区域被判定为文本行区域，并用对号标记；而如果$nv_i<0$，那么结点$n_i$所代表的区域被判定为非文本区域，并用错号标记。通过上述对3个结点的二分类判断后，就会在$8=2^3$种情况中只选定1种情况条目进行后续的处理。然后在第2阶段的比较过程中，拿选定情况条目中的结点值$nv$进行对比，以此得到最终的决策结果。用图\ref{fig.c4_search_strategy}(b)举例来说：假如$n_7$和$n_5$都被判定为文本，而$n_6$被判定为非文本，那么根据第1阶段的判定过程，选定情况条目3；然后在情况条目3中，经过第2阶段比较过程，发现结点值$nv_5>nv_7$，那么得到最终的决策结果是：保留父亲结点$n_5$代表的融合的文本行区域，而剪掉子结点$n_6$和$n_7$各自所代表的分离的文本行区域。
         
-        
+        同理，下1条路径三元组$p_{i+1}=\left\{np_{i+1},nl_{i+1},nr_{i+1}\right\}$ 依然会在2阶段判决过程中得到自己相应的决策结果。那么重复该搜索策略，直到路径集合$P$中的所有路径三元组都经过处理而获得决策结果。最终，就获得了从二叉树型搜索空间中搜索得到的最优文本行定位结果。
 
     \section{实验和结果分析}
     \esection{Experimental Results}
