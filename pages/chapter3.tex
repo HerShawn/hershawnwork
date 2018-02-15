@@ -32,7 +32,7 @@
     基于边缘骨架切割的文字检测子的具体流程如图\ref{fig.c3_overview} 所示。首先对于输入的场景文字图片，利用结构化边缘检测方法\cite{Dollar2015Fast} 得到输入图片的结构化边缘响应图，如图\ref{fig.c3_overview}(b) 所示。然后基于一系列像素强度值阈值，对边缘响应图进行分割，得到相应的二值化边缘图。接着在每个二值边缘图上，通过细化操作得到其边缘骨架图，如图\ref{fig.c3_overview}(c) 所示。图中的红色结点是在边缘骨架上，通过8 领域内像素点分析所找到的边缘骨架结点。而文字边缘与背景间的粘连点，就存在于这些边缘骨架结点中。
     为了将文字边缘从背景杂质中切割出来，需要切割开这些边缘骨架结点，以解决文字边缘的粘连问题。而由不同的二值边缘图所生成的边缘骨架图上的结点是不同的。因此选择合适的边缘骨架图上的结点进行切割，是解决文字边缘粘连问题的核心步骤。
 
-    \begin{figure*}[htbp]
+    \begin{figure*}[!h]
     \centering
     \includegraphics[width=\textwidth]{./figures/c3_overview_1.jpg}
     \begin{minipage}[t]{0.22\linewidth}
@@ -80,7 +80,7 @@
 
         从图\ref{fig.c3_response_to_map} 中可以看出，当分割阈值较小时，从边缘响应图上分割得到的二值边缘图较为清晰，但存在大量非文字的边缘，导致文字边缘与背景的粘连问题较为严重。而当分割阈值较大时，从边缘响应图上分割得到的二值边缘图中，大部分非文字的边缘已经被略去，而文字边缘相对而言被较为完整的保留下来，使得文字边缘的粘连问题得到缓解。但同时，大阈值分割下的二值边缘图较为模糊和残缺，边缘时有断裂现象，不利于后续的边缘分析与处理。
 
-        \begin{figure*}[htbp]
+        \begin{figure*}[!h]
         \centering
         \includegraphics[width=\textwidth]{./figures/c3_edge_response.jpg}
         \includegraphics[width=\textwidth]{./figures/c3_edge_map.jpg}
@@ -122,7 +122,7 @@
 
         细化方法将重复迭代操作，直到提取出的边缘的骨架图不再变化为止。因此候选文字骨架的生成步骤如图\ref{fig.c3_skeleton} 所示：首先利用结构化边缘检测子在输入的场景文字图像中计算得到结构化边缘响应，然后通过一系列分割阈值获得相应的二值边缘图，最后通过8 连通区域细化方法得到边缘骨架图，即宽度为1 个像素宽的边缘骨架线，如图\ref{fig.c3_skeleton}(d) 中的1 个像素宽的黑色细线所示。
 
-        \begin{figure*}[htbp]
+        \begin{figure*}[!h]
         \centering
         \includegraphics[width=\textwidth]{./figures/c3_skeleton.jpg}
         \begin{minipage}[t]{0.24\linewidth}
@@ -156,7 +156,7 @@
 
         在\ref{sec.c3_skeleton} 节中已经阐述，对于边缘响应图，利用不同的分割阈值可以得到相应的二值边缘图。而且分割阈值较大时，二值边缘清晰但粘连问题严重，阈值较小时非文字边缘大部分被消除但是文字边缘也出现断裂问题。因此选择合适的二值边缘图，使得既不会在图中出现过多的背景边缘，又能提供清晰的边缘信息，对后续解决边缘粘连问题至关重要。而观察由二值边缘图所生成的边缘骨架图的形态，就是一种判断所选边缘图是否合适的方式。
 
-        \begin{figure}[htbp]
+        \begin{figure}[!h]
         \centering
         \includegraphics[width=\textwidth]{./figures/c3_select_skeleton.jpg}
         \begin{minipage}[t]{0.48\linewidth}
@@ -171,7 +171,7 @@
 
         如图\ref{fig.c3_select_skeleton}(a) 所示，当分割阈值偏小时，从边缘响应图上分割得到的二值边缘图中混有过多的非文字边缘信息，因此通过细化操作所得的边缘骨架图十分杂乱无序，不能作为解决边缘粘连问题的有效信息。在这种混乱的边缘骨架图上检测到的候选边缘骨架粘连点，数目特别多且分布杂乱。因此，检测到的候选边缘骨架粘连点的数目，在一定程度上可以指示所选二值边缘图和相应的边缘骨架图的合理程度。除此之外，还可以通过对生成的边缘骨架图计算欧拉数，来避免选择不合适的边缘骨架图。
 
-        \begin{figure}[htbp]
+        \begin{figure}[!h]
         \centering
         \includegraphics[width=\textwidth]{./figures/c3_compare_skeleton.jpg}
         \caption{不同的边缘骨架图的连通区域数目稳定，但孔洞数目变化剧烈}
@@ -227,7 +227,7 @@
 
         第1阶段的分类方法是形态学滤除。首先，从图\ref{fig.c3_compare_skeleton}(a) 和图\ref{fig.c3_compare_skeleton}(b) 的对比中，我们可以分析出文字边缘骨架和非文字边缘骨架之间在形态上的不同：背景边缘骨架比较直且分散，而文字边缘骨架则相对而言弯曲且聚合在一起。基于这一观察，大量的非文字边缘骨架就可以通过一些形态学的限制来过滤掉。
 
-        \begin{figure}[htbp]
+        \begin{figure}[!h]
         \centering
         \includegraphics[width=\textwidth]{c3_skeleton_samples.jpg}
         \begin{minipage}[t]{0.48\linewidth}
@@ -248,16 +248,16 @@
         \label{eq:c3_concentration_ratio}
         \end{equation}
 
-        其中，$skel_{ol}$是边缘骨架$skel$重叠的部分，即$skel_{ol}=skel(sum_{ver}(skel)>1)$。 而$Sum_{ver}(skel)$是按竖直方向将边缘骨架$skel$ 累加起来，如图\ref{fig.c3_concentration_ratio}(c) 所示：红线代表竖直方向累加像素点的个数为1 的阈值线，那么超过红线的位部分，表示该位置上存在重叠的边缘骨架$skel_{ol}$，即在$skel_{ol}$ 中 $Sum_{ver}(skel)>1$。 通过对图\ref{fig.c3_concentration_ratio}(c) 的观察，文字边缘骨架绝大部分都是重叠的，也就是$skel_{ol}$ 的长度占$skel$ 长度的比率$C(skel)$ 较大，因此较大的比率$C(skel)$ 表征了文字边缘骨架具有更高的聚合度。与此同时，观察发现非文字边缘骨架只有很小一部分是重叠的，即$skel_{ol}$ 的长度占$skel$ 长度的比率$C(skel)$ 很小，所以小$C(skel)$ 表征了非文字边缘骨架的聚合度更小。
+        其中，$skel_{ol}$是边缘骨架$skel$ 重叠的部分，即$skel_{ol}=skel(sum_{ver}(skel)>1)$。 而$Sum_{ver}(skel)$是按竖直方向将边缘骨架$skel$ 累加起来，如图\ref{fig.c3_concentration_ratio}(c) 所示：红线代表竖直方向累加像素点的个数为1 的阈值线，那么超过红线的位部分，表示该位置上存在重叠的边缘骨架$skel_{ol}$，即在$skel_{ol}$ 中 $Sum_{ver}(skel)>1$。 通过对图\ref{fig.c3_concentration_ratio}(c) 的观察，文字边缘骨架绝大部分都是重叠的，也就是$skel_{ol}$ 的长度占$skel$ 长度的比率$C(skel)$ 较大，因此较大的比率$C(skel)$ 表征了文字边缘骨架具有更高的聚合度。与此同时，观察发现非文字边缘骨架只有很小一部分是重叠的，即$skel_{ol}$ 的长度占$skel$ 长度的比率$C(skel)$ 很小，所以小$C(skel)$ 表征了非文字边缘骨架的聚合度更小。
 
         通过在第1阶段分类过程中，采用上述的这些简单的形态学限制，包括本文新提出的针对文字边缘骨架特征的聚合度限制，绝大多数非文字的边缘骨架就可以被高效的过滤掉。但是可能存在一些与文字边缘骨架极为相近的非文字边缘骨架没有在形态学过滤阶段被排除。那么这些被遗漏的非文字边缘骨架，就将在后续的第2 阶段分类过程中进行过滤。
 
         \subsection{基于卷积神经网络的滤除}
         \esubsection{convolutional neural network-based filtering}
 
-        第2阶段的分类过程是更为精细的分类操作。受Wang 等\cite{Wang2012End}提出的利用卷积神经网络(CNN) 作端对端文字识别方法的启发，在精细分类阶段我们提出一种基于CNN的文字边缘骨架分类器，用于滤除掉遗漏下来的非文字边缘骨架。这个基于CNN 的边缘骨架分类器的架构如图\ref{fig.c3_cnn}所示，其网络结构是由2 个卷积层，分别后接2 个池化层，最后连1 个全连接层构成。其中第1个卷积层有$n_1 = 64$ 个卷积模板，第2 个卷积层有$n_2 = 128$ 个卷积模板。全连接层后接2 个类别，分别为文字边缘和非文字边缘类别。2 类中置信度更高的类别即为分类判别结果。
+        第2阶段的分类过程是更为精细的分类操作。受Wang 等\cite{Wang2012End} 提出的利用卷积神经网络(CNN) 作端对端文字识别方法的启发，在精细分类阶段我们提出一种基于CNN 的文字边缘骨架分类器，用于滤除掉遗漏下来的非文字边缘骨架。这个基于CNN 的边缘骨架分类器的架构如图\ref{fig.c3_cnn}所示，其网络结构是由2 个卷积层，分别后接2 个池化层，最后连1 个全连接层构成。其中第1个卷积层有$n_1 = 64$ 个卷积模板，第2 个卷积层有$n_2 = 128$ 个卷积模板。全连接层后接2 个类别，分别为文字边缘和非文字边缘类别。2 类中置信度更高的类别即为分类判别结果。
 
-        \begin{figure}[htbp]
+        \begin{figure}[!h]
         \centering
         \includegraphics[width=\textwidth]{c3_cnn.jpg}
         \caption{单尺度卷积神经网络分类器的架构} \label{fig.c3_cnn}
@@ -282,7 +282,7 @@
 	\begin{algorithmic}[1]
 		\REQUIRE 候选文字边缘骨架的包围框集合 $B$, 以及求取的MSER集合 $M$
 		\ENSURE 经过局部迭代优化操作，对定位调整后的包围框集合 $R$
-		\STATE 将MSER集合$M$按照位置分成2 类：强MSER 子集合$S$，是指包含在$B$ 边界内部的MSER集合；弱MSER 子集合$W$ ，是指位于$B$ 边界之外的MSER 集合
+		\STATE 将MSER集合$M$按照位置分成2 类：强MSER 子集合$S$，是指包含在$B$ 边界内部的MSER 集合；弱MSER 子集合$W$ ，是指位于$B$ 边界之外的MSER 集合
         \FOR {$b \in B$}
         \STATE //本算法的目的是：在文本行方向上，将$b$调整为$b_{exp}$
         \STATE 计算位于$b$中的MSER$S$ 的特征均值$ms$
@@ -296,21 +296,27 @@
 	\end{algorithmic}
     \end{algorithm}
 
-    其中，$Dist_f(s,w)$指的是$s_f$ 和$w_f$之间归一化的$L2$距离。而$f$ 是候选MSER的特征，这些特征包含：$sw$ 是笔划宽度，$c$是HSV和灰度的颜色通道，$h,w$是候选MSER的高度和宽度；$yc$ 是候选MSER在y 坐标轴上的中心坐标；另外函数$ol$用以计算2 个候选MSER 的包围框之间的重叠率；而$T$是经过实验计算得出的经验阈值。
+    其中，$Dist_f(s,w)$指的是$s_f$ 和$w_f$ 之间归一化的$L2$距离。而$f$ 是候选MSER 的特征，这些特征包含：$sw$ 是笔划宽度，$c$是HSV和灰度的颜色通道，$h,w$是候选MSER的高度和宽度；$yc$ 是候选MSER 在y 坐标轴上的中心坐标；另外函数$ol$用以计算2 个候选MSER 的包围框之间的重叠率；而$T$ 是经过实验计算得出的经验阈值。
 
-    \begin{figure}[htbp]
+    \begin{figure}[!h]
     \centering
     \includegraphics[width=\textwidth]{c3_iter_local_refine.jpg} \caption{局部迭代优化的效果示例}
     \label{fig.c3_iter_local_refine}
     \end{figure}
 
-    利用局部迭代优化方法来矫正文本行的实验效果如图\ref{fig.c3_iter_local_refine} 所示：图中左边的是未经过局部迭代优化前的文字检测结果，其中用红色矩形框标注的是用基于边缘骨架切割的检测子提取出的候选文字，用蓝色矩形框标注的是用MSER 提出的候选文字；而图中右边的是经过局部迭代优化后得到的文字检测结果，可看出通过算法\ref{alg:c3_iter_local_refine} 将基于边缘骨架切割的文字检测子和基于MSER的检测方法结合起来，从而追回那些因图像模糊而未被检测到的候选文字。通过文本行局部迭代优化后得到的最终检测结果如图\ref{fig.c3_iter_local_refine} 中右图内的黄色虚线包围框所示，可见包围框的查全率以及同真实结果值之间的重叠率都得到了极大提升。
+    利用局部迭代优化方法来矫正文本行的实验效果如图\ref{fig.c3_iter_local_refine} 所示：图中左边的是未经过局部迭代优化前的文字检测结果，其中用红色矩形框标注的是用基于边缘骨架切割的检测子提取出的候选文字，用蓝色矩形框标注的是用MSER 提出的候选文字；而图中右边的是经过局部迭代优化后得到的文字检测结果，可看出通过算法\ref{alg:c3_iter_local_refine} 将基于边缘骨架切割的文字检测子和基于MSER 的检测方法结合起来，从而追回那些因图像模糊而未被检测到的候选文字。通过文本行局部迭代优化后得到的最终检测结果如图\ref{fig.c3_iter_local_refine} 中右图内的黄色虚线包围框所示，可见包围框的查全率以及同真实结果值之间的重叠率都得到了极大提升。
 
     \section{实验和结果分析}
     \esection{Experimental Results}
 
         \subsection{实验数据集与评价标准}
         \esubsection{Data-set and Evaluation Protocol}
+
+        为了验证本章提出的文字检测子的效果，将该检测子运行在自然场景文字测试集ICDAR 2013 上。这个测试集合包含462张标注的自然场景文字图片，其中有229张图片用以训练，而233 张图片用于测试。该测试集合非常具有挑战性：因为图片存在光照不均、尺度不同(尺度范围从$459 \times 405$到$3888 \times 2592$)的问题，而且文字也存在不同字体和颜色的问题。最终使用Wolf 等\cite{Wolf2006Object}提出的评价标准来验证本方法的文字检测结果。评价标准包括：查全recall，查准precision和f值，如下列公式所示：
+
+        $recall = \frac {\sum_{i=1}^{|G|}Match_G(G_i,D,t_r,t_p)} {|G|}  ,   precision =\frac {\sum_{j=1}^{|D|}Match_G(D_j,G,t_r,t_p)} {|D|}$
+        
+        最后文字检测$f$值就是查全recall和查准precision的均值。
 
         \subsection{实验结果与分析}
         \esubsection{Experimental Results and Analysis}
