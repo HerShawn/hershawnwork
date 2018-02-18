@@ -255,7 +255,7 @@
         \subsection{基于卷积神经网络的滤除}
         \esubsection{convolutional neural network-based filtering}
 
-        第2阶段的分类过程是更为精细的分类操作。受Wang 等\cite{Wang2012End} 提出的利用卷积神经网络(CNN) 作端对端文字识别方法的启发，在精细分类阶段我们提出一种基于CNN 的文字边缘骨架分类器，用于滤除掉遗漏下来的非文字边缘骨架。这个基于CNN 的边缘骨架分类器的架构如图\ref{fig.c3_cnn}所示，其网络结构是由2 个卷积层，分别后接2 个池化层，最后连1 个全连接层构成。其中第1个卷积层有$n_1 = 64$ 个卷积模板，第2 个卷积层有$n_2 = 128$ 个卷积模板。全连接层后接2 个类别，分别为文字边缘和非文字边缘类别。2 类中置信度更高的类别即为分类判别结果。
+        第2阶段的分类过程是更为精细的分类操作。受Wang 等\cite{Wang2012End} 提出的利用卷积神经网络(CNN) 作端对端文字识别方法的启发，在精细分类阶段我们提出一种基于CNN 的文字边缘骨架分类器，用于滤除掉遗漏下来的非文字边缘骨架。这个基于CNN 的边缘骨架分类器的架构如图\ref{fig.c3_cnn}所示，其网络结构是由2 个卷积层，分别后接2 个池化层，最后连1 个全连接层构成。其中第1 个卷积层有$n_1 = 64$ 个卷积模板，第2 个卷积层有$n_2 = 128$ 个卷积模板。全连接层后接2 个类别，分别为文字边缘和非文字边缘类别。2 类中置信度更高的类别即为分类判别结果。
 
         \begin{figure}[!h]
         \centering
@@ -274,7 +274,7 @@
 
     本文上述所提出的基于边缘骨架切割的检测方法和2 阶段分类判别方法可以获得较高的文字检测查全率，但是文字检测结果同真实结果值(ground truth)之间的重叠率还是不满足期望。为了达到文字检测过程中的紧凑性(compactness) 标准，我们通过下面的算法\ref{alg:c3_iter_local_refine} 来调整文字检测包围框，使其更靠近文字的真实位置：
 
-    \begin{algorithm}
+    \begin{algorithm}[!h]
 	\renewcommand{\algorithmicrequire}{\textbf{输入：}}
 	\renewcommand{\algorithmicensure}{\textbf{输出：}}
 	\caption{文本行的局部迭代优化算法}
@@ -315,20 +315,42 @@
         为了验证本章提出的文字检测子的效果，将该检测子运行在自然场景文字测试集ICDAR 2013 上。这个测试集合包含462张标注的自然场景文字图片，其中有229张图片用以训练，而233 张图片用于测试。该测试集合非常具有挑战性：因为图片存在光照不均、尺度不同(尺度范围从$459 \times 405$到$3888 \times 2592$)的问题，而且文字也存在不同字体和颜色的问题。最终使用Wolf 等\cite{Wolf2006Object}提出的评价标准来验证本方法的文字检测结果。评价标准包括：查全recall，查准precision和f值，如下列公式所示：
 
         $recall = \frac {\sum_{i=1}^{|G|}Match_G(G_i,D,t_r,t_p)} {|G|}  ,   precision =\frac {\sum_{j=1}^{|D|}Match_G(D_j,G,t_r,t_p)} {|D|}$
-        
+
         最后文字检测$f$值就是查全recall和查准precision的均值。
 
         \subsection{实验结果与分析}
         \esubsection{Experimental Results and Analysis}
 
-        \begin{figure}[htbp]
+        如表\ref{tab.c3_icdar13}所示，本章提出的方法在ICDAR 2013测试数据集上取得了86.79\%的查准率和76.21\%的查全率。该方法的查全率超过了其它所有的检测方法的查全率，这得益于文字边缘骨架提取方法的良好设计。同时我们提出了2阶段非文字过滤以及文本行的局部迭代优化策略，以确保本方法的高查准结果。值得一提的是，本方法没有使用传统的图像金字塔上的多尺度滑动窗进行文字与背景的二分类，而是采用文字边缘骨架提取加单尺度的CNN分类判断，因此在保证检测成绩的同时，大幅缩减了计算量和用时。另外，在提出的方法中融入文本行的局部迭代优化(Iteratively Local Refinement，简称ILR)，可以进一步将检测F 值提升3.3\%，并超越其它所有先进的文字检测方法。
+
+        \begin{table}[!h]
+        \centering
+        \caption{在ICDAR 2013上的文字检测效果(\%)}
+        \begin{tabular}{p{0.25\textwidth}|p{0.25\textwidth} p{0.25\textwidth} p{0.25\textwidth}}
+        \hline
+        方法 & 查全R & 查准P & F值 \\
+        \hline
+        \textbf{Proposed} & \textbf{76.21} & \textbf{86.79} & \textbf{81.16}(+3.3) \\
+        Without \textbf{ILR} & 73.28 & 84.80 & 77.83 \\
+        \hline
+        Tian\cite{Tian2016Text} & 75.89 & 85.15 & 80.25 \\
+        Zhu\cite{Zhu2016Text} & 75.00 & 85.00 & 79.00 \\
+        Gupta\cite{Gupta2016Synthetic} & 66.30 & 94.80 & 78.00 \\
+        Yin\cite{Yin2013Robust} & 65.11 & 83.98 & 75.89 \\
+        Neumann\cite{Neumann2012Real} & 64.84 & 87.51 & 74.49 \\
+        \hline
+        \end{tabular}
+        \label{tab.c3_icdar13}
+        \end{table}
+
+        \begin{figure}[!h]
         \centering
         \includegraphics[width=\textwidth]{c3_ic13_results.jpg}
         \label{fig.c3_ic13_results}
         \caption{ICDAR2013 上的测试结果示例}
         \end{figure}
 
-        \begin{figure}[htbp]
+        \begin{figure}[!h]
         \centering
         \includegraphics[width=\textwidth]{c3_msra_results.jpg}
         \label{fig.c3_msra_results}

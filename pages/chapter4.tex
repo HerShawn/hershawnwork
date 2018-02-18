@@ -137,7 +137,7 @@
 
     在明确候选文本行分割线$L$，以及二叉树型搜索空间$N$中各变量的含义后，由$L$构建$N$的过程如算法\ref{alg:c4_build_binary_tree} 所示：
 
-    \begin{algorithm}
+    \begin{algorithm}[!h]
 	\renewcommand{\algorithmicrequire}{\textbf{输入:}}
 	\renewcommand{\algorithmicensure}{\textbf{输出:}}
 	\caption{递归地建立二叉树型搜索空间}
@@ -174,7 +174,7 @@
 
         给定二叉树型搜索空间$N$,假设$N$是由$m$ 个结点$n$ 构成，那么通过算法\ref{alg:c4_binary_tree_search}，就可搜索出路径$P={p_1,p_2,...,p_{(m-1)/2}}$。 路径中的每个$p_i \in P$都是1个3元组：包含了父亲结点$np_i$，左子结点$nl_i$和右子结点$nr_i$。
 
-        \begin{algorithm}
+        \begin{algorithm}[!h]
     	\renewcommand{\algorithmicrequire}{\textbf{输入:}}	
         \renewcommand{\algorithmicensure}{\textbf{输出:}}
     	\caption{从二叉树型搜索空间中找到最优路径}
@@ -253,7 +253,7 @@
         \end{figure}
 
         具体的2阶段判决过程如图\ref{fig.c4_search_strategy}(b) 所示：首先在第1阶段的判断过程中，结点$n_i$所代表的文字行区域要根据该结点的识别成绩值$nv$来进行而分类：如果$nv_i>0$，那么结点$n_i$所代表的区域被判定为文本行区域，并用对号标记；而如果$nv_i<0$，那么结点$n_i$所代表的区域被判定为非文本区域，并用错号标记。通过上述对3个结点的二分类判断后，就会在$8=2^3$种情况中只选定1种情况条目进行后续的处理。然后在第2阶段的比较过程中，拿选定情况条目中的结点值$nv$进行对比，以此得到最终的决策结果。用图\ref{fig.c4_search_strategy}(b)举例来说：假如$n_7$和$n_5$都被判定为文本，而$n_6$被判定为非文本，那么根据第1阶段的判定过程，选定情况条目3；然后在情况条目3中，经过第2阶段比较过程，发现结点值$nv_5>nv_7$，那么得到最终的决策结果是：保留父亲结点$n_5$代表的融合的文本行区域，而剪掉子结点$n_6$和$n_7$各自所代表的分离的文本行区域。
-        
+
         同理，下1条路径三元组$p_{i+1}=\left\{np_{i+1},nl_{i+1},nr_{i+1}\right\}$ 依然会在2阶段判决过程中得到自己相应的决策结果。那么重复该搜索策略，直到路径集合$P$中的所有路径三元组都经过处理而获得决策结果。最终，就获得了从二叉树型搜索空间中搜索得到的最优文本行定位结果。
 
     \section{实验和结果分析}
