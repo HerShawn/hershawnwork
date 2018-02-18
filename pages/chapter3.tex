@@ -326,7 +326,7 @@
         \begin{table}[!h]
         \centering
         \caption{在ICDAR 2013上的文字检测效果(\%)}
-        \begin{tabular}{p{0.25\textwidth}|p{0.25\textwidth} p{0.25\textwidth} p{0.25\textwidth}}
+        \begin{tabular}{p{0.25\textwidth}|p{0.25\textwidth} p{0.25\textwidth} p{0.13\textwidth}}
         \hline
         方法 & 查全R & 查准P & F值 \\
         \hline
@@ -341,6 +341,30 @@
         \hline
         \end{tabular}
         \label{tab.c3_icdar13}
+        \end{table}
+
+        \begin{table}[htbp]
+        \centering
+        \caption{在ICDAR 2011测试集上对于字符提取数目和检出率的测评}
+        \begin{tabular}{p{0.33\textwidth}|p{0.33\textwidth} p{0.25\textwidth}}
+        \hline
+        方法 & 候选字符数目 & 检出率 \\
+        \hline
+        All ERs & 6,051,331 & 0.966 \\
+        \hline
+        Matas\cite{Matas2004Robust} & 39,762 & 0.539 \\
+        \hline
+        Sung\cite{Sung2015Scene} &  &  \\
+        Initial ERs & 1,729,833 & 0.896 \\
+        Refined ERs & 93,357 & 0.877 \\
+        \hline
+        \textbf{Our method}  &  &  \\
+        Initial Skeletons & 608,394 & 0.936 \\
+        + Classifier & 6,034 & 0.842 \\
+         + Classifier + ILR & 8,231 & 0.879 \\
+        \hline
+        \end{tabular}
+        \label{tab.c3_icdar11}
         \end{table}
 
         \begin{figure}[!h]
