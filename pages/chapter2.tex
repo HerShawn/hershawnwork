@@ -75,6 +75,8 @@
     \caption{基于对称性文本行检测算法流程}
     \label{fig.c2_zhang_cnn}
     \end{figure*}
+    
+    Zhang等\cite{Zhang2015Symmetry}提出一种利用滑动窗提取对称性特征的文字检测算法。该方法首先设计1个对称性计算模板来计算滑动窗口内区域的梯度直方图、局部二值模式LBP以及颜色等特征的相似度，然后将这些特征输入随机森林分类器从而得到每个像素属于文本行对称轴的概率图。接着把概率图上概率相近的像素集中形成文本行对称轴并用CRF进行更准确的分类。然后在此基础上利用窗口尺寸生成候选文本行并作多个尺度上的文本行的投影融合。最后采用训练好的CNN分类器去掉非文字的图像区域。
 
     \begin{table*}[!h]
     \centering
@@ -91,6 +93,8 @@
     \end{tabular}
     \label{tab.c2_region_based}
     \end{table*}
+    
+    表格\ref{tab.c2_region_based}总结了基于区域的相关文字检测方法。
 
     \section{基于连通部件的场景文字检测方法}
     \esection{Connected Component-based Method}
