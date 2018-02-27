@@ -45,7 +45,36 @@
     
     上述文字检测方法一般使用人工设计的特征，例如颜色、纹理、笔画宽度等，进行文字与非文字分类。虽然这些特征可以区分大多数的文字与非文字，部分与文字相似的背景却难以区分，例如窗户、砖块等。为了能够更好地反映文字的属性，近年来许多方法开始采用深度学习技术，其中最常用的一种结构是卷积神经网络（CNN）。CNN是一种特殊的前馈人工神经网络，其中的神经元之间的连接关系类似于视觉皮层的结构。同时，因为CNN能够利用图像中的局部空间相关性，故CNN特别适合于处理计算机视觉问题，尤其是目标识别领域，例如在手写字符识别、交通标志识别、图像分类等方面都取得了优秀的表现。
     
+    \begin{figure}[!h]
+    \centering
+    \includegraphics[width=\textwidth]{c2_wangtao_cnn.jpg}
+    \caption{Wang等\cite{Wang2012End}采用的CNN网络框架}
+    \label{fig.c2_wangtao_cnn}
+    \end{figure}
     
+    Wang等\cite{Wang2012End}设计的端对端文字检测和识别框架的核心即是卷积神经网络CNN。该方法首先利用滑动窗在图像金字塔上扫描得到候选文字图像块区域，然后将这些图像块区域缩放成$32\times32$像素大小的正方形小图块。接着这些图块的灰度图会输入到1个训练好的，含有2层卷积的CNN网络中进行特征的提取，以及对这些图块区域的分类。其中，卷积神经网络CNN的结构如图\ref{fig.c2_wangtao_cnn}所示：输入图像小块经过第1层的64个卷积模板的卷积操作后，得到64个$25\times25$的响应图，紧接着再执行平均池化获得相应的$5\times5$ 的响应；然后再通过第2卷积层中的128个卷积模板的卷积操作及后续的平均池化操作后，得到$2\times2\times128$的全连接层。在通过上CNN 网络的特征提取和分类后，最后再利用非极大抑制NMS操作来筛选重叠的分类结果以获得文字行定位结果。此外还构建62类的分类器来识别图块中的文字。
+    
+    \begin{figure*}[!h]
+    \centering
+    \includegraphics[width=\textwidth]{./figures/c2_zhang_cnn.jpg}
+    \begin{minipage}[t]{0.18\linewidth}
+    \centerline{ \small (a) 输入原图}
+    \end{minipage}
+    \begin{minipage}[t]{0.18\linewidth}
+    \centerline{ \small (b) 概率图}
+    \end{minipage}
+    \begin{minipage}[t]{0.18\linewidth}
+    \centerline{ \small (c) 对称轴}
+    \end{minipage}
+    \begin{minipage}[t]{0.18\linewidth}
+    \centerline{ \small (d) 候选文本行}
+    \end{minipage}
+    \begin{minipage}[t]{0.18\linewidth}
+    \centerline{ \small (d) CNN分类结果}
+    \end{minipage}
+    \caption{基于对称性文本行检测算法流程}
+    \label{fig.c2_zhang_cnn}
+    \end{figure*}
 
     \begin{table*}[!h]
     \centering
