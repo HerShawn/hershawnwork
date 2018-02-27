@@ -39,6 +39,8 @@
 
     大部分基于区域的方法一般都会利用滑动窗来获取候选的包含文字的局部图像区域，因此在有些方法中也称其为基于滑动窗的文字检测算法。如图\ref{fig.c2_region_based} 所示，这是1个典型的基于区域的文字检测方法的流程示例。在该流程示例中，首先利用滑动窗来得到局部图像区域以作为候选区域，然后提取区域中的颜色、纹理等视觉特征，最后结合分类器以进行文字与非文字区域的分类判别，输出结果是检测出来的文字区域。
 
+    Chen等\cite{Chen2004Detecting}利用滑动窗扫描得到文字区域并获取区域中的79个特征，然后构造4个级联的Adaboost 分类器来分类和筛选这些候选文字区域，最后用OCR软件识别图像中文字信息。其中4个级联的分类器是由不同的文字底层特征构造而成的弱分类器，通过利用Adaboost方法将这些弱分类器组合学习而获得1个分类文字与背景的强分类器。用于训练弱分类器的三组特征分别是：候选区域内竖直和水平方向灰度的标准差与平均值；区域内的统计梯度信息；区域内边缘组合特征。而本方法中使用的79个特征，分散在4层的级联分类器中，分别有1、10、30和50维文字特征。最后OCR使用的技术是用Niblack方法来二值化检测到的文字区域以识别出图像中的文字。
+
     \begin{table*}[!h]
     \centering
     \caption{基于区域的相关文字检测方法}
@@ -58,8 +60,21 @@
     \section{基于连通部件的场景文字检测方法}
     \esection{Connected Component-based Method}
 
-    \section{基于边缘的场景文字检测方法}
-    \esection{Edge-based Method}
+    \begin{table*}[!h]
+    \centering
+    \caption{基于连通部件的相关文字检测方法}
+    \begin{tabular}{p{0.17\textwidth}|p{0.1\textwidth}| p{0.63\textwidth}}
+    \hline
+    作者 & 年份 & 方法概述 \\
+    \hline
+    Epshetein等\cite{Epshtein2010Detecting} & 2010年 & 候选文字筛选，笔画宽度转换SWT，文本行生成；\\
+    Neumann等\cite{Neumann2011Text} & 2011年 &   最稳定极值区域MSER，穷举搜索\\
+    Dollar等\cite{Dollar2015Fast} & 2015年 & 结构化边缘检测子，随机森林分类器 \\
+    Yu等\cite{Yu2016Scene} & 2016年 & 文字的特征池，文字的边缘重组，以及SVM分类器 \\
+    \hline
+    \end{tabular}
+    \label{tab.c2_connected_component_based}
+    \end{table*}
 
     \section{本章小结}
     \esection{Brief Summary}
