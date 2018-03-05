@@ -82,11 +82,15 @@
 
 为了更准确的定位到文字，本文接着提出一种基于二叉树搜索的文字检测方法。首先对于输入的场景文字图片，利用基于边缘骨架切割的文字检测子来提取粗略的候选文字包围盒定位结果。然而其定位结果存在重叠率不足的问题，为了进一步提高文字检测的精度，首先对候选文字包围盒计算统计边缘响应，接着通过对求取到的统计边缘响应进行水平投影、求取梯度以及执行非极大值抑制等操作，以获得候选文本行。最后由生成的候选文本行中建立起二叉树型的搜索空间，并根据优化策略从搜索空间中找到最优的文本行定位结果。该结果即是经过优化后得到的文字细致定位结果，相比于边缘骨架切割文字检测子的粗略定位结果而言，该方法的文字检测精度得到了大幅提升。
 
-
+本文将提出的两种方法分别在ICDAR2011，ICDAR2013以及MSRA-TD500等测试集上与相关方法进行了对比实验与结果统计，实验结果证明了本文提出方法的鲁棒性。此外，本文还在更具挑战性的SVT数据集上对提出算法进行了测试以及结果的对比，由此来证明本文算法的实用性和可靠性。
 
 }
 
 % 摘要，英文。段间空行
 \eabstract{
+
+Text in natural scene is an image symbol that can store and record semantic information. It plays an important role in every aspect of daily life. Scene text detection is a hot research topic in the field of object detection, which can be widely applied to content based retrieval, intelligent unmanned platform, auxiliary blind system, industrial automation and other artificial intelligence applications. But precisely detecting the text is a challenging task in the scene image because of the following difficulties: Occlusion, shadows and low contrast conditions in complex natural scenes; Text's various orientation, size, color, font and language; Image' degradation and distortion. In this paper, we first investigated and analyzed the existing methods, and then proposed the following two effective methods:
+
+Firstly, this paper proposed the skeleton-cut method to solve the edge-adhesion problem. We used structured edge detection method to get edge response, then a series of binary edge maps are obtained by segmentation. Then the skeleton map is obtained by the thinning operation, and the skeleton-junctions are found through the analysis of the 8 neighborhoods algorithm. We disconnect the skeleton-junctions to get the candidate text skeletons, and then filter out most of the non-text skeletons. The remaining undistinguishable non-text skeletons can be further filtered through CNN-based classifier. Finally, based on the non maximum suppression and the text lines aggregation operation, the text location results are obtained. Although the text detection method based on skeleton-cut algorithm has achieved high recall, the overlap of the text bounding box may not meet the requirement, and the detection result of the text is not accurate enough.
 
 }
