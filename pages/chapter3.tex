@@ -340,7 +340,7 @@
 
         文字检测算法也会引入查全和查准来衡量算法性能，但存在3 项复杂性：
 
-        1）文字或目标检测与信息检索（IR）的不同：设文字检测方法结果和真值（ground truth）中的定位包围盒（bounding box）分别用$D_i$ 和$G_j$ 表示，那么就判断$D_i$ 是否为true positive而言，文字检测要比信息检索(IR)更为困难。这是因为在文字检测中，存在1个$D_i$ 和多个$G_j$ 匹配的情况，因此其用作正确性判断的匹配方法是soft （匹配值是由0 到1 之间的1个分数）和非一对一的匹配。
+        1）文字或目标检测与信息检索（IR）的不同：设文字检测方法结果和真值（ground truth）中的定位包围盒（bounding box）分别用$D_i$ 和$G_j$ 表示，那么就判断$D_i$ 是否为true positive而言，文字检测要比信息检索(IR)更为困难。这是因为在文字检测中，存在1个$D_i$ 和多个$G_j$ 匹配的情况，因此其用作正确性判断的匹配方法是soft （匹配值是由0 到1 之间的1 个分数）和非一对一的匹配。
 
         2）文字检测与目标检测也存在差异：首先，文字可以在字符、单词或文本行这几个层级（或称为粒度）上进行衡量；然后对于文字检测问题来说，其最终目标是为文字识别提供精准的输入，并且检测结果能极大程度地决定识别效果。
 
@@ -352,6 +352,8 @@
         \label{fig.c3_evalu_bbox_match}
         \end{figure*}
 
+        其中ICDAR2003数据集采用的就是1对1的匹配方式\cite{Mariano2002Performance}，这种匹配方式最为简洁，其计算过程如公式\ref{eq.c3_match_1v1}所示：
+
         \begin{equation}
         \left\{
         \begin{array}{c}
@@ -359,7 +361,10 @@
         P(G,D)=\frac{\sum_{j=1}^DBestMatch_D(D_j)}{|D|}
         \end{array}
         \right.
+        \label{eq.c3_match_1v1}
         \end{equation}
+        
+        
 
         \subsection{实验结果与分析}
         \esubsection{Experimental Results and Analysis}
