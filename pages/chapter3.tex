@@ -305,7 +305,7 @@
 	\end{algorithmic}
     \end{algorithm}
 
-    其中，$Dist_f(s,w)$指的是$s_f$ 和$w_f$ 之间归一化的$L2$ 距离。而$f$ 是候选MSER 的特征，这些特征包含：$sw$ 是笔划宽度，$c$ 是HSV 和灰度的颜色通道，$h,w$是候选MSER的高度和宽度；$yc$ 是候选MSER 在y 坐标轴上的中心坐标；另外函数$ol$用以计算2 个候选MSER 的包围框之间的重叠率；而$T$ 是经过实验计算得出的经验阈值。
+    其中，$Dist_f(s,w)$指的是$s_f$ 和$w_f$ 之间归一化的$L2$ 距离。而$f$ 是候选MSER 的特征，这些特征包含：$sw$ 是笔划宽度，$c$ 是HSV 和灰度的颜色通道，$h,w$ 是候选MSER的高度和宽度；$yc$ 是候选MSER 在y 坐标轴上的中心坐标；另外函数$ol$用以计算2 个候选MSER 的包围框之间的重叠率；而$T$ 是经过实验计算得出的经验阈值。
 
     \begin{figure*}[!h]
     \centering
@@ -364,7 +364,7 @@
         \label{eq.c3_match_1v1}
         \end{equation}
 
-        给定1个定位包围盒b，假设b是某一个包围盒真实值$G_i$，并且给定另外1 个包围盒的序列B，假设B是文字检测算法的定位结果D，那么如公式\ref{eq.c3_1v1_bestmatch}所示，算法BestMatch表示的是b在集合B中的匹配得分，并会得到从0到1之间的1 个数值：当集合B中存在1个和b几乎完全重合的包围盒时值为1；相反当b同B种的包围盒不存在任何的重合时值为0。
+        给定1个定位包围盒b，假设b是某一个包围盒真实值$G_i$，并且给定另外1 个包围盒的序列B，假设B是文字检测算法的定位结果D，那么如公式\ref{eq.c3_1v1_bestmatch}所示，算法BestMatch表示的是b在集合B中的匹配得分，并会得到从0到1之间的1 个数值：当集合B中存在1 个和b几乎完全重合的包围盒时值为1；相反当b 同B种的包围盒不存在任何的重合时值为0。
 
         \begin{equation}
         \left\{
@@ -376,7 +376,14 @@
         \label{eq.c3_1v1_bestmatch}
         \end{equation}
 
-        
+        上述这种1对1匹配的方式将问题进行了简化，使得计算方便简单，但也存在着问题：若文字定位的真实区域的标注粒度比较大时，如1个包围盒中覆盖有多个单词，那么此时尽管文字检测算法可能正确定位出每个单词，但测评得到的检测分数依然会很低。那么针对这种问题，在ICDAR2013上采用的就是更新了的测评方法\cite{Wolf2006Object}:该方法同时就1对1,1对多以及多对1的这几种状况进行了综合考虑。
+
+        在新的测评方法中，用两个矩阵$\sigma$和$\tau$来分别表示查全率和查准率，其计算公式如\ref{eq.c3_overlap_matrices}所示：可见这两个矩阵的大小都是$|G|\times|D|$，其中1行就代表某一个文字真实区域包围盒$G_i$，而1列就代表文字检测算法的某一个定位结果$D_j$。
+
+        \begin{equation}
+        \sigma_{ij}=R(G_i,D_j),\tau_{ij}=P(G_i,D_j)
+        \label{eq.c3_overlap_matrices}
+        \end{equation}
 
         \subsection{实验结果与分析}
         \esubsection{Experimental Results and Analysis}
