@@ -352,7 +352,7 @@
         \label{fig.c3_evalu_bbox_match}
         \end{figure*}
 
-        其中ICDAR2003数据集采用的就是1对1的匹配方式\cite{Mariano2002Performance}，这种匹配方式最为简洁，其计算过程如公式\ref{eq.c3_match_1v1}所示：
+        其中ICDAR2003数据集采用的就是1对1的匹配方式\cite{Mariano2002Performance}，这种匹配方式最为简洁，其计算过程如公式\ref{eq.c3_match_1v1}所示：都使用了BestMatch来计算查全率和查准率。
 
         \begin{equation}
         \left\{
@@ -363,7 +363,19 @@
         \right.
         \label{eq.c3_match_1v1}
         \end{equation}
-        
+
+        给定1个定位包围盒b，假设b是某一个包围盒真实值$G_i$，并且给定另外1 个包围盒的序列B，假设B是文字检测算法的定位结果D，那么如公式\ref{eq.c3_1v1_bestmatch}所示，算法BestMatch表示的是b在集合B中的匹配得分，并会得到从0到1之间的1 个数值：当集合B中存在1个和b几乎完全重合的包围盒时值为1；相反当b同B种的包围盒不存在任何的重合时值为0。
+
+        \begin{equation}
+        \left\{
+        \begin{array}{c}
+        BestMatch_G(G_i)=\max_{j=1...|D|} \frac{2*Area(G_i \cap D_j)}{Area(G_i)+Area(D_j)}\\
+        BestMatch_D(D_j)=\max_{i=1...|G|} \frac{2*Area(D_j \cap G_i)}{Area(D_j)+Area(G_i)}
+        \end{array}
+        \right.
+        \label{eq.c3_1v1_bestmatch}
+        \end{equation}
+
         
 
         \subsection{实验结果与分析}
