@@ -336,6 +336,7 @@
         其中，符号N.o是数量Number of 的首字母缩写。最后综合指标F-mean （也可记为F-score）是查全（recall）和查准（precision）的调和平均数（Harmonic mean）,该指标用以衡量算法的综合性能：
         \begin{equation}
         F=\frac{2}{\frac{1}{recall}+\frac{1}{precision}}=\frac{2recall*precsion}{recall+precision}
+        \label{eq.c3_F}
         \end{equation}
 
         文字检测算法也会引入查全和查准来衡量算法性能，但存在3 项复杂性：
@@ -388,8 +389,21 @@
         1）一个真实区域$G_i$只和1个检测区域$D_j$匹配，也就是1对1的匹配。这种匹配方式要满足的条件是：$G_i$的大部分只能被$D_j$检测出来，即$\sigma_{ij} \ge t_r$；且只有$D_j$对$G_i$的查准率符合要求，即$\tau_{ij} \ge t_p$。
 
         2）一个真实区域$G_i$被检测区域集合D的子集$D_o$ 检测到了，也就是1对多的匹配。该匹配满足的条件有：$D_o$中的每个区域都能检出$G_i$的部分，即$\tau_{ij} \ge t_p,\forall j \in D_o$；并且$S_o$能检测到$G_i$的大部分，即$\sum_{j \in S_o} \sigma_{ij} \ge t_r$。
-        
+
         3）一个算法检测到的区域$D_j$与真实区域集合G的子集$G_o$匹配，即多对1的匹配。满足条件为：$G_o$中的每个区域都有一部分能被检测到，即$\sigma_{ij} \ge t_r,\forall i \in G_o$；而且$D_j$也以一定的精度检测到了$G_o$，也就是$\sum_{i \in G_o} \tau_{ij} \ge t_p$。
+
+        根据上述规则，就可以定义在不同类型匹配情况下的匹配度$Match_G(G_i,D,t_r,t_p)$以及$Match_D(D_j,G,t_r,t_p)$，并得到最终的测评指标$R(G,D,t_r,t_p)$和$P(G,D,t_r,t_p)$，如公式\ref{eq.c3_R_P}所示。
+        \begin{equation}
+        \left\{
+        \begin{array}{c}
+        R(G,D,t_r,t_p)=\frac{\sum_i Match_G(G_i,D,t_r,t_p)}{|G|}\\
+        P(G,D,t_r,t_p)=\frac{\sum_j Match_D(D_j,G,t_r,t_p)}{|D|}
+        \end{array}
+        \right.
+        \label{eq.c3_R_P}
+        \end{equation}
+
+        那么在求得查准和查全后，F值也能依据公式 \ref{eq.c3_F}计算得到。
 
         \subsection{实验结果与分析}
         \esubsection{Experimental Results and Analysis}
