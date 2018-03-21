@@ -146,7 +146,7 @@
         \begin{minipage}[t]{0.24\linewidth}
         \centerline{\small (d)边缘骨架图}
         \end{minipage}
-        \caption{文字边缘骨架生成的流程图}
+        \caption{文字边缘骨架生成过程中各阶段的示例图}
         \label{fig.c3_skeleton}
         \end{figure*}
 
@@ -375,7 +375,7 @@
         \end{equation}
         上述这种1对1匹配的方式将问题进行了简化，使得计算方便简单，但也存在着问题：若文字定位的真实区域的标注粒度比较大时，如1 个包围盒中覆盖有多个单词，那么此时尽管文字检测算法可能正确定位出每个单词，但测评得到的检测分数依然会很低。那么针对这种问题，在ICDAR2013上采用的就是更新了的测评方法\cite{Wolf2006Object}:该方法同时就1 对1,1对多以及多对1的这几种状况进行了综合考虑。
 
-        在新的测评方法中，用两个矩阵$\sigma$和$\tau$ 来分别表示查全率和查准率，其计算公式如\ref{eq.c3_overlap_matrices}所示：可见这两个矩阵的大小都是$|G|\times|D|$，其中1行就代表某一个文字真实区域包围盒$G_i$，而1列就代表文字检测算法的某一个定位结果$D_j$。
+        在新的测评方法中，用两个矩阵$\sigma$和$\tau$ 来分别表示查全率和查准率，其计算公式如\ref{eq.c3_overlap_matrices} 所示：可见这两个矩阵的大小都是$|G|\times|D|$，其中1行就代表某一个文字真实区域包围盒$G_i$，而1列就代表文字检测算法的某一个定位结果$D_j$。
         \begin{equation}
         \sigma_{ij}=R(G_i,D_j),\tau_{ij}=P(G_i,D_j)
         \label{eq.c3_overlap_matrices}
