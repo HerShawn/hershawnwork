@@ -100,7 +100,7 @@
     	\end{algorithmic}
         \end{algorithm}
 
-        其中$rs$指代的是响应小块，它的底面积是1 个定位包围框$b$，而高是$b$ 对应的置信度分数$c$。将所有的这些响应小块$rs$ 堆叠在一起，就构成了如图\ref{fig.c4_static_skeleton_response}(b) 所示的统计边缘响应$s$。
+        其中$rs$指代的是响应小块，它的底面积是1 个定位包围框$b$，而高是$b$ 对应的置信度分数$c$。 将所有的这些响应小块$rs$ 堆叠在一起，就构成了如图\ref{fig.c4_static_skeleton_response}(b) 所示的统计边缘响应$s$。
 
         \begin{figure*}[!h]
         \begin{minipage}[t]{0.37\linewidth}
@@ -180,7 +180,7 @@
 
     假设红色分割线$l_i$有2个属性：距离$ld_i$ 和置信度$lc_i$。 其中属性$ld_i$ 指代的是从图像顶部到分割线$l_i$ 位置的距离，例如在图\ref{fig.c4_binary_tree_construction}(b) 中，$ld_3=331_{px}$就是指从图像顶部到线$l_3$的距离有331 个像素大小。而$lc_i$ 是分割线$l_i$的置信度，其数值是由$l_i$ 的梯度值归一化得到的，例如在图\ref{fig.c4_binary_tree_construction}(b) 中，$lc_3=0.987$ 表征的是$l_3$是文本行之间分割边界的可能性非常大。
 
-    然后假设我们要构建的二叉树型搜索空间$N$ 是由一些结点$n$ 构成的。其中任一结点$n_i$有2 个对应的属性：结点代表的图像区域范围$nr_i$，以及结点的数值$nv_i$。以图\ref{fig.c4_binary_tree_construction}(a) 为例，节点$n_5$ 所代表的文本行区域范围是从线$l_3$ 到$l_5$之间的区域，而$n_5$ 的值是由$l_4$ 的置信度值$lc_4$ 赋予的。
+    然后假设我们要构建的二叉树型搜索空间$N$ 是由一些结点$n$ 构成的。其中任一结点$n_i$ 有2 个对应的属性：结点代表的图像区域范围$nr_i$，以及结点的数值$nv_i$。以图\ref{fig.c4_binary_tree_construction}(a) 为例，节点$n_5$ 所代表的文本行区域范围是从线$l_3$ 到$l_5$ 之间的区域，而$n_5$ 的值是由$l_4$ 的置信度值$lc_4$ 赋予的。
 
     在明确候选文本行分割线$L$，以及二叉树型搜索空间$N$ 中各变量的含义后，由$L$ 构建$N$ 的过程如算法\ref{alg:c4_build_binary_tree} 所示：
 
@@ -219,7 +219,7 @@
         \subsection{搜索路径}
         \esubsection{Searching the paths}
 
-        给定二叉树型搜索空间$N$,假设$N$是由$m$ 个结点$n$ 构成，那么通过算法\ref{alg:c4_binary_tree_search}，就可搜索出路径$P={p_1,p_2,...,p_{(m-1)/2}}$。 路径中的每个$p_i \in P$ 都是1个3元组：包含了父亲结点$np_i$，左子结点$nl_i$和右子结点$nr_i$。
+        给定二叉树型搜索空间$N$,假设$N$是由$m$ 个结点$n$ 构成，那么通过算法\ref{alg:c4_binary_tree_search}，就可搜索出路径$P={p_1,p_2,...,p_{(m-1)/2}}$。 路径中的每个$p_i \in P$ 都是1个3元组：包含了父亲结点$np_i$，左子结点$nl_i$ 和右子结点$nr_i$。
 
         \begin{algorithm}[!h]
     	\renewcommand{\algorithmicrequire}{\textbf{输入:}}	
@@ -254,9 +254,9 @@
     	  \end{algorithmic}
         \end{algorithm}
 
-        算法\ref{alg:c4_binary_tree_search} 的具体过程如下所述：根据二叉树的性质，如果二叉树$N$ 中存在$m$ 个结点，那么算法\ref{alg:c4_binary_tree_search} 就要迭代执行$(m-2)/2$ 次。在第$i$次迭代中：首先将具有最小正数值$nv_j \in NV$ 的结点$n_j \in N$，赋予路径三元组中的父亲结点$np_i$，并将$nv_j$ 设为0，从而使结点$n_j$转换为叶子结点；然后在二叉树$N$ 中寻找能赋予路径三元组中左子结点$nl_i$的1 个结点$n_x$，该结点必须满足下述条件：$n_x$的范围的左边界$nr_x$[1] 须和$n_j$ 的范围的左边界$nr_j$[1] 相等，且其值$nv_x$ 须为0。那么找到满足要求的结点$n_x$，并将其赋予$nl_i$。 紧接着将该结点的值$nv_x$ 设为-1，这意味着结点$n_x$ 已被标注为``已处理''，也就是说结点$n_x$ 不会在算法的下一轮迭代中被考虑；类似地，搜索到$n_t$并将其赋予路径三元组中的右子结点$nr_i$，然后将$n_t$ 的值改为-1。
+        算法\ref{alg:c4_binary_tree_search} 的具体过程如下所述：根据二叉树的性质，如果二叉树$N$ 中存在$m$ 个结点，那么算法\ref{alg:c4_binary_tree_search} 就要迭代执行$(m-2)/2$ 次。在第$i$次迭代中：首先将具有最小正数值$nv_j \in NV$ 的结点$n_j \in N$，赋予路径三元组中的父亲结点$np_i$，并将$nv_j$ 设为0，从而使结点$n_j$转换为叶子结点；然后在二叉树$N$ 中寻找能赋予路径三元组中左子结点$nl_i$ 的1 个结点$n_x$，该结点必须满足下述条件：$n_x$的范围的左边界$nr_x$[1] 须和$n_j$ 的范围的左边界$nr_j$[1] 相等，且其值$nv_x$ 须为0。 那么找到满足要求的结点$n_x$，并将其赋予$nl_i$。 紧接着将该结点的值$nv_x$ 设为-1，这意味着结点$n_x$ 已被标注为``已处理''，也就是说结点$n_x$ 不会在算法的下一轮迭代中被考虑；类似地，搜索到$n_t$并将其赋予路径三元组中的右子结点$nr_i$，然后将$n_t$ 的值改为-1。
 
-        以上过程是算法\ref{alg:c4_binary_tree_search} 的第i 次迭代。那么经过$(m-1)/2$次迭代后，包含$(m-1)/2$ 个三元组$p$的路径集合$P$就被构建了出来。
+        以上过程是算法\ref{alg:c4_binary_tree_search} 的第i 次迭代。那么经过$(m-1)/2$次迭代后，包含$(m-1)/2$ 个三元组$p$的路径集合$P$ 就被构建了出来。
 
         \begin{figure*}[!h]
         \centering
@@ -292,15 +292,15 @@
 
         \begin{figure*}[!h]
         \centering
-        \includegraphics[width=\textwidth]{./figures/c4_search_strategy1.jpg}
+        \includegraphics[width=0.8\textwidth]{./figures/c4_search_strategy1.jpg}
         \centerline{\small (a) 1个被搜索到的路径三元组：其中每个结点代表1个候选文本行区域 }
-        \includegraphics[width=\textwidth]{./figures/c4_search_strategy2.jpg}
+        \includegraphics[width=0.8\textwidth]{./figures/c4_search_strategy2.jpg}
         \centerline{\small (b) 对路径三元组的剪枝或融合策略}
         \caption{ 1个搜索策略的示例}
         \label{fig.c4_search_strategy}
         \end{figure*}
 
-        具体的2阶段判决过程如图\ref{fig.c4_search_strategy}(b) 所示：首先在第1 阶段的判断过程中，结点$n_i$ 所代表的文字行区域要根据该结点的识别成绩值$nv$ 来进行而分类：如果$nv_i>0$，那么结点$n_i$ 所代表的区域被判定为文本行区域，并用对号标记；而如果$nv_i<0$，那么结点$n_i$ 所代表的区域被判定为非文本区域，并用错号标记。通过上述对3 个结点的二分类判断后，就会在$8=2^3$种情况中只选定1种情况条目进行后续的处理。然后在第2 阶段的比较过程中，拿选定情况条目中的结点值$nv$进行对比，以此得到最终的决策结果。用图\ref{fig.c4_search_strategy}(b) 举例来说：假如$n_7$ 和$n_5$都被判定为文本，而$n_6$ 被判定为非文本，那么根据第1 阶段的判定过程，选定情况条目3；然后在情况条目3 中，经过第2 阶段比较过程，发现结点值$nv_5>nv_7$，那么得到最终的决策结果是：保留父亲结点$n_5$ 代表的融合的文本行区域，而剪掉子结点$n_6$ 和$n_7$ 各自所代表的分离的文本行区域。
+        具体的2阶段判决过程如图\ref{fig.c4_search_strategy}(b) 所示：首先在第1 阶段的判断过程中，结点$n_i$ 所代表的文字行区域要根据该结点的识别成绩值$nv$ 来进行而分类：如果$nv_i>0$，那么结点$n_i$ 所代表的区域被判定为文本行区域，并用对号标记；而如果$nv_i<0$，那么结点$n_i$ 所代表的区域被判定为非文本区域，并用错号标记。通过上述对3 个结点的二分类判断后，就会在$8=2^3$种情况中只选定1 种情况条目进行后续的处理。然后在第2 阶段的比较过程中，拿选定情况条目中的结点值$nv$进行对比，以此得到最终的决策结果。用图\ref{fig.c4_search_strategy}(b) 举例来说：假如$n_7$ 和$n_5$都被判定为文本，而$n_6$ 被判定为非文本，那么根据第1 阶段的判定过程，选定情况条目3；然后在情况条目3 中，经过第2 阶段比较过程，发现结点值$nv_5>nv_7$，那么得到最终的决策结果是：保留父亲结点$n_5$ 代表的融合的文本行区域，而剪掉子结点$n_6$ 和$n_7$ 各自所代表的分离的文本行区域。
 
         同理，下1条路径三元组$p_{i+1}=\left\{np_{i+1},nl_{i+1},nr_{i+1}\right\}$ 依然会在2阶段判决过程中得到自己相应的决策结果。那么重复该搜索策略，直到路径集合$P$ 中的所有路径三元组都经过处理而获得决策结果。最终，就获得了从二叉树型搜索空间中搜索得到的最优文本行定位结果。
 
@@ -317,14 +317,14 @@
         用以评价文字检测效果的标准依然是Wolf 等\cite{Wolf2006Object}提出的Object/area graphs 方法。其中对文字检测查全和查准率的计算公式\ref{eq:c4_eval} 所示：
 
         \begin{equation}
-        recall = \frac {\sum_{i=1}^{|G|}Match_G(G_i,D,t_r,t_p)} {|G|}  ,   
+        recall = \frac {\sum_{i=1}^{|G|}Match_G(G_i,D,t_r,t_p)} {|G|}  ,
         precision =\frac {\sum_{j=1}^{|D|}Match_G(D_j,G,t_r,t_p)} {|D|}
         \label{eq:c4_eval}
         \end{equation}
 
-        而文字检测的$f$值是查全recall和查准precision的均值。
+        而文字检测的$f$值是查全recall和查准precision 的均值。
 
-        此外本章提出的方法还与其它方法在各场景文字图片数据集上进行了识别成绩的对比实验。用以验证识别效果的评判标准来自Wang\cite{Wang2012End}的方法。识别结果包含所有的拉丁文字，但是忽略那些不足3个字符长度的单词。只有当检测到的1个候选文字的包围框与文字定位结果真值(ground truth) 的重叠率(Interaction over Union，简称为IoU) 超过50\% 时，该候选文字的识别成绩才被认为是有效的。
+        此外本章提出的方法还与其它方法在各场景文字图片数据集上进行了识别成绩的对比实验。用以验证识别效果的评判标准来自Wang\cite{Wang2012End} 的方法。识别结果包含所有的拉丁文字，但是忽略那些不足3个字符长度的单词。只有当检测到的1 个候选文字的包围框与文字定位结果真值(ground truth) 的重叠率(Interaction over Union，简称为IoU) 超过50\% 时，该候选文字的识别成绩才被认为是有效的。
 
         \subsection{实验结果与分析}
         \esubsection{Experimental Results and Analysis}
@@ -334,12 +334,15 @@
         值得注意的是本章提出的方法是一种快速的文字检测算法，与Tian\cite{Tian2016Text} 的基于CNN 的文字检测子相比，本方法消耗的是极小的计算量和时间。在ICDAR 2013的数据集中，平均的图像尺寸大约是1200乘以900 个像素大小。而本章提出的方法平均处理一张图像大概只用0.76 秒左右，这其中包括了基于边缘骨架的文字检测子，统计边缘响应以及基于二叉树型搜索空间搜索的文本行优化等步骤的全过程。此外，与我们在上一章提出的方法即He\cite{He2017scene}的文字检测方法相比，本章新提出的基于二叉树搜索的文本行矫正方法，又使F 值提升了近2\%，由此证明该方法的确增强了文字检测的查全效果及查准效果。
 
         \begin{table*}[!h]
+        \small
         \centering
         \caption{在ICDAR 2013上的文字检测效果(\%)}
-        \begin{tabular}{p{0.25\textwidth}|p{0.25\textwidth} p{0.25\textwidth} p{0.13\textwidth}}
-        \hline
+        \begin{tabular}{p{0.25\textwidth}p{0.25\textwidth} p{0.25\textwidth} p{0.13\textwidth}}
+        %\hline
+        \toprule
         方法 & 查全R & 查准P & F值 \\
-        \hline
+        %\hline
+        \midrule
         \textbf{Proposed} & \textbf{89.2} & \textbf{75.5} & \textbf{82.3}\\
         He\cite{He2017scene} & 76.2 & 86.7 & 81.1 \\
         Cho\cite{Cho2016Canny} & 78.4 & 86.2 & 82.1 \\
@@ -348,7 +351,8 @@
         Gupta\cite{Gupta2016Synthetic} & 66.30 & 94.80 & 78.00 \\
         Pham\cite{Pham2016Robust} & 65.11 & 83.98 & 75.89 \\
         Neumann\cite{Neumann2012Real} & 64.84 & 87.51 & 74.49 \\
-        \hline
+        %\hline
+        \bottomrule
         \end{tabular}
         \label{tab.c4_icdar13}
         \end{table*}
@@ -356,12 +360,15 @@
         如表\ref{tab.c4_icdar11}所示，在ICDAR 2011 文字测试数据集上，本章提出的基于二叉树搜索的文字检测方法与上一章提出的He\cite{He2017scene} 的方法，以及其它最先进的的文字检测方法如Cho\cite{Cho2016Canny}、Sung\cite{Sung2015Scene} 等的方法都进行了字符提取数目和检出率的量化对比。从实验结果上来看，本章提出的方法可以在获得最高文字检出率的同时，保证提取的字符数目最少。该实验说明表明，相对于其它先进文字检测方法而言，本章方法都达到更优的文字查全和查准效果的折衷。
 
         \begin{table*}[!h]
+        \small
         \centering
         \caption{在ICDAR 2011测试集上对于字符提取数目和检出率的测评}
-        \begin{tabular}{p{0.33\textwidth}|p{0.33\textwidth} p{0.25\textwidth}}
-        \hline
+        \begin{tabular}{p{0.35\textwidth} p{0.35\textwidth} p{0.2\textwidth}}
+        %\hline
+        \toprule
         方法 & 候选字符数目 & 检出率 \\
-        \hline
+        %\hline
+        \midrule
         All ERs & 6,051,331 & 0.966 \\
         Matas\cite{Matas2004Robust} & 39,762 & 0.539 \\
         Sung\cite{Sung2015Scene} & 93,357 & 0.877  \\
@@ -369,7 +376,8 @@
         He\cite{He2017scene} & 8,231 & 0.879 \\
         \hline
         \textbf{Proposed} & \textbf{7,137} & \textbf{0.892} \\
-        \hline
+        %\hline
+        \bottomrule
         \end{tabular}
         \label{tab.c4_icdar11}
         \end{table*}
@@ -378,22 +386,25 @@
 
         \begin{figure}[!h]
         \centering
-        \includegraphics[width=\textwidth]{./figures/c4_recall_proposals.jpg}
+        \includegraphics[width=0.8\textwidth]{./figures/c4_recall_proposals.jpg}
         \caption{在ICDAR 2011 数据集上，本方法在各阶段中的文字检测查全与候选字符提取数目间的关系折线图: (a) 候选文字边缘骨架提取， (b) 文字边缘骨架切割， (c) 文字边缘骨架过滤， (d) 候选文本行定位， (e)非极大值抑制， (f) 基于二叉树搜索的文本行优化。}
         \label{fig.c4_recall_proposals}
         \end{figure}
 
-        在第\ref{sec.c4_searching strategies}节基于二叉树搜索的文本行优化的搜索策略中，我们详细探讨过自然场景文字检测与识别之间的紧密关系。其中，依据文字识别的成绩，文字检测的结果才能更准确的定位到文本行的位置。而反过来，更准确的文字检测结果，也会进一步的增强文字识别的精度。
+        在第\ref{sec.c4_searching strategies} 节基于二叉树搜索的文本行优化的搜索策略中，我们详细探讨过自然场景文字检测与识别之间的紧密关系。其中，依据文字识别的成绩，文字检测的结果才能更准确的定位到文本行的位置。而反过来，更准确的文字检测结果，也会进一步的增强文字识别的精度。
 
         因此，我们也将本章提出的方法与其他方法在各场景文字图片数据集上做了识别成绩的对比实验，如表\ref{tab.c4_recognition} 所示。在所有的数据集上，本章提出的方法的端对端识别成绩都高于其它所有方法。在SVT-50 数据集上，由Jaderberg\cite{Jaderberg2016Reading} 提出的端对端识别模型获得了P/R/F(查准/查全/F值)分别为0.85/0.68/0.76的识别分数，而本章方法在这个成绩基础上继续提升5\%从而达到0.86/0.67/0.77的识别成绩。同样在IC03 的各种词典配置的数据集上(IC03-50，IC03-FULL 和 IC03)，本章方法相对于其它先进方法对F 值的提升均在2\%左右，最终达到P/R/F分别为0.96/0.87/0.92的识别分数。
 
         \begin{table*}[!h]
+        \small
         \centering
         \caption{本章提出方法与其它先进方法的端对端文字识别成绩}
-        \begin{tabular}{l|l l l l l l l}
-        \hline
+        \begin{tabular}{p{0.12\textwidth} p{0.1\textwidth} p{0.1\textwidth} p{0.1\textwidth} p{0.1\textwidth} p{0.1\textwidth} p{0.05\textwidth} p{0.1\textwidth} }
+        %\hline
+        \toprule
         方法 & IC03-50 & IC03-FULL & IC03 & SVT-50 & SVT & IC11 & IC13  \\
-        \hline
+        %\hline
+        \midrule
         Neumann\cite{Neumann2010A} & -- & -- & 41 & -- & -- & -- & -- \\
         Wang\cite{Wang2012End} & 68 & 51 & -- & 38 & -- & -- & -- \\
         Wang\cite{Wang2012End} & 72 & 67 & -- & 46 & -- & -- & -- \\
@@ -403,7 +414,8 @@
         Jaderberg\cite{Jaderberg2016Reading} & 90 & 86 & 78 & 76 & 53 & 76 & 76 \\
         He\cite{He2017scene} & 91 & 85 & 78 & 77 & 53 & 75 & 77 \\
         \textbf{Proposed} & 92 & 86 & 79 & 77 & 55 & 78 & 79 \\
-        \hline
+        %\hline
+        \bottomrule
         \end{tabular}
         \label{tab.c4_recognition}
         \end{table*}
@@ -430,6 +442,6 @@
 
     本章提出的是基于二叉树搜索的文本行定位矫正方法。首先对于输入的场景文字图片，利用上一章提出检测子来提取粗略的候选文字包围盒定位结果。然而其定位结果存在重叠率不足的问题，为了进一步提高文字检测的精度，在本章中提出一种统计边缘响应算法，接着通过对统计边缘响应进行水平投影、求取梯度以及执行非极大值抑制等操作，以获得候选文本行。最后由生成的候选文本行中建立起二叉树型的搜索空间，并根据优化策略从搜索空间中找到最优的文本行定位结果。该结果即是经过优化后得到的文字细致定位结果，相比于上一章得到的粗略定位结果而言，其文字检测的精度得到了大幅提升。
 
-    在ICDAR系列测试集以及谷歌街景数据集SVT上，我们将本章提出的方法与其它先进方法以及上一章的方法都做了对比实验。实验结果验证了本章方法的有效性。
+    在ICDAR系列测试集以及谷歌街景数据集SVT 上，我们将本章提出的方法与其它先进方法以及上一章的方法都做了对比实验。实验结果验证了本章方法的有效性。
 
 

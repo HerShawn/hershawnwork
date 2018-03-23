@@ -108,7 +108,7 @@
 
         因此，分割阈值不同，从边缘响应图上分割得到的二值边缘图也不同。较高阈值下的边缘图保留了更多的边缘信息，但更难区别文字与非文字边缘。较低阈值的边缘图去除了非文字边缘信息，但边缘更不清晰。不同于Canny 算子\cite{Ding2001On} 等固定阈值的边缘二值图检测方法，本文采用递增的分割阈值从边缘响应图中得到一系列候选边缘二值图，然后从中自适应地选择出最合适的二值边缘图进行后续处理。自适应选择最优二值边缘图的内容会在\ref{sec.c3_skeleton_cut} 节中详细阐述。
 
-        接下来利用8连通区域细化方法\cite{Lam2002Thinning} 在二值边缘图上提取边缘的骨架线。该细化方法会一直重复迭代操作，直到图像不再发生变化。每次迭代操作包含2 个子迭代操作：在第1 个子迭代操作中，当且仅当条件 $G_1$, $G_2$ 和 $G_3$ 全部满足时，二值边缘上的像素点$p$ 将被消除。而在第2个子迭代操作中，当且仅当条件$G_1$, $G_2$ 和 $G_3$$'$ 全部满足时，二值边缘上的像素点$p$ 将被消除。这些细化操作的条件如下所示：
+        接下来利用8连通区域细化方法\cite{Lam2002Thinning} 在二值边缘图上提取边缘的骨架线。该细化方法会一直重复迭代操作，直到图像不再发生变化。每次迭代操作包含2 个子迭代操作：在第1 个子迭代操作中，当且仅当条件 $G_1$, $G_2$ 和 $G_3$ 全部满足时，二值边缘上的像素点$p$ 将被消除。而在第2个子迭代操作中，当且仅当条件$G_1$, $G_2$ 和 $G_3$$'$ 全部满足时，二值边缘上的像素点$p$ 将被消除。这些细化操作的条件为：
 
         1）条件$G_1: X_H(p)=1$
 
@@ -189,7 +189,7 @@
 
         欧拉数是二值图像的拓扑特征，其数值是连通区域数目与孔洞数目的差值。由不同的二值边缘图所生成的边缘骨架图，它们的连通区域数目比较稳定，但是孔洞数目的变化很剧烈。如图\ref{fig.c3_compare_skeleton} 所示，过低或过高的分割阈值下的二值边缘图所生成的边缘骨架图的孔洞数与连通区域的数目的差距很大，而正常分割阈值下的边缘骨架图中孔洞数目和连通区域数目的差值则保持在合理范围内。
 
-        1种简单且有效的计算欧拉数的方法是计算$2*2$ 像素模式的数目，这些像素模式的类型存在以下几类：
+        1种简单且有效的计算欧拉数的方法是计算$2*2$ 像素模式的数目，这些像素模式的类型存在$Q_1,Q_2$以及$Q_3$这3类：
 
         $Q_1 = \left\{
         \quad
@@ -411,12 +411,15 @@
         如表\ref{tab.c3_icdar13}所示，本章提出的方法在ICDAR 2013 测试数据集上取得了86.79\%的查准率和76.21\%的查全率。该方法的查全率超过了其它所有的检测方法的查全率，这得益于文字边缘骨架提取方法的良好设计。同时我们提出了2 阶段非文字过滤以及文本行的局部迭代优化策略，以确保本方法的高查准结果。值得一提的是，本方法没有使用传统的图像金字塔上的多尺度滑动窗进行文字与背景的二分类，而是采用文字边缘骨架提取加单尺度的CNN 分类判断，因此在保证检测成绩的同时，大幅缩减了计算量和用时。另外，在提出的方法中融入文本行的局部迭代优化(Iteratively Local Refinement，简称ILR)，可以进一步将检测F 值提升3.3\%，并超越其它所有先进的文字检测方法。
 
         \begin{table*}[!h]
+        \small
         \centering
         \caption{在ICDAR 2013上的文字检测效果(\%)}
-        \begin{tabular}{p{0.25\textwidth}|p{0.25\textwidth} p{0.25\textwidth} p{0.13\textwidth}}
-        \hline
+        \begin{tabular}{p{0.25\textwidth} p{0.25\textwidth} p{0.25\textwidth} p{0.13\textwidth}}
+        %\hline
+        \toprule
         方法 & 查全R & 查准P & F值 \\
-        \hline
+        %\hline
+        \midrule
         \textbf{Proposed} & \textbf{76.21} & \textbf{86.79} & \textbf{81.16}(+3.3) \\
         %\textbf{Proposed} & \textbf{76.21} & \textbf{86.79} & \textbf{81.16} \\
         Without \textbf{ILR} & 73.28 & 84.80 & 77.83 \\
@@ -426,7 +429,8 @@
         Gupta\cite{Gupta2016Synthetic} & 66.30 & 94.80 & 78.00 \\
         Yin\cite{Yin2013Robust} & 65.11 & 83.98 & 75.89 \\
         Neumann\cite{Neumann2012Real} & 64.84 & 87.51 & 74.49 \\
-        \hline
+        %\hline
+        \bottomrule
         \end{tabular}
         \label{tab.c3_icdar13}
         \end{table*}
@@ -434,12 +438,15 @@
         表格\ref{tab.c3_icdar11}展示了本方法与若干先进方法在ICDAR 2011测试数据集上关于字符检出率的量化比较。ICDAR 2011测试数据集包含255 张自然场景图片，里面总共有6309 个字符。在进行对比的几种方法中，若对提取到的所有极值区域(Extremal Region，简称为ER) 都不判别而直接认定为字符，那么字符的检出率高达96\%。但这样的话提取的候选字符有6 百万之多，计算量过大，并且在这么多的候选字符中真正的字符更难被提取出来，因而查准率极低。如果采用Matas 等\cite{Matas2004Robust} 提出的最稳定极值区域(Maximally Stable Extremal Regions，简称为MSER)，则候选字符数目骤降到3 万个，计算量大幅下降，且查准率得到提升。但从检出率的指标来看，该方法的成绩也从96\% 减低到53\%，因此牺牲的是文字检测的查全效果。
 
         \begin{table*}[htbp]
+        \small
         \centering
         \caption{在ICDAR 2011测试集上对于字符提取数目和检出率的测评}
-        \begin{tabular}{p{0.33\textwidth}|p{0.33\textwidth} p{0.25\textwidth}}
-        \hline
+        \begin{tabular}{p{0.35\textwidth} p{0.35\textwidth} p{0.2\textwidth}}
+        %\hline
+        \toprule
         方法 & 候选字符数目 & 检出率 \\
-        \hline
+        %\hline
+        \midrule
         All ERs & 6,051,331 & 0.966 \\
         \hline
         Matas\cite{Matas2004Robust} & 39,762 & 0.539 \\
@@ -452,7 +459,8 @@
         Initial Skeletons & 608,394 & 0.936 \\
         + Classifier & 6,034 & 0.842 \\
          + Classifier + ILR & 8,231 & 0.879 \\
-        \hline
+        %\hline
+        \bottomrule
         \end{tabular}
         \label{tab.c3_icdar11}
         \end{table*}
@@ -460,18 +468,22 @@
         在候选字符数目与字符检出率的折衷方面做的较好的是Sung 等\cite{Sung2015Scene} 提出的方法。这个方法首先在提取极值区域ER 的初始阶段保证了89\% 的高检出率，同时候选字符的数目也维持在较低的水平。接着在后续阶段此方法继续大幅降低候选字符的数量直到9 万多个，而检出率也仅下降了2\% 而已。从结果上来看，Sung 的方法可以说既保证了文字检查的高查全率，同时还兼顾了检出文字的高水平查准效果。而本章提出的方法进一步加大了这种高查全兼顾高查准的优势：在使检出率高于Sung 的方法的同时，又使候选字符的数目相对于Sung 的方法降低了1 个量级。因此从在ICDAR 2011 测试集上的字符检测结果来说，本章提出方法优于其它先进的文字检测方法。
 
         \begin{table*}[!h]
+        \small
         \centering
         \caption{ 本方法与其它文字检测方法在MSRA-TD500 测试数据集上的检测成绩对比}
-        \begin{tabular}{p{0.25\textwidth}|p{0.25\textwidth} p{0.25\textwidth} p{0.13\textwidth}}
-        \hline
+        \begin{tabular}{p{0.25\textwidth} p{0.25\textwidth} p{0.25\textwidth} p{0.13\textwidth}}
+        %\hline
+        \toprule
         方法 & 查全R & 查准P & F值 \\
-        \hline
+        %\hline
+        \midrule
         \textbf{Proposed} & 0.64 & 0.82 & 0.72 \\
         Yin\cite{Yin2015Multi} & 0.63 & 0.81 & 0.71 \\
         Kang\cite{Kang2014Orientation} & 0.62 & 0.71 & 0.66 \\
         Yin\cite{Yin2013Robust} & 0.61 & 0.71 & 0.65 \\
         Tu\cite{Tu2012Detecting} & 0.63 & 0.63 & 0.60\\
-        \hline
+        %\hline
+        \bottomrule
         \end{tabular}
         \label{tab.c3_msra}
         \end{table*}
