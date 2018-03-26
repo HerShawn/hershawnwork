@@ -292,9 +292,9 @@
 
         \begin{figure*}[!h]
         \centering
-        \includegraphics[width=0.8\textwidth]{./figures/c4_search_strategy1.jpg}
+        \includegraphics[width=\textwidth]{./figures/c4_search_strategy1.jpg}
         \centerline{\small (a) 1个被搜索到的路径三元组：其中每个结点代表1个候选文本行区域 }
-        \includegraphics[width=0.8\textwidth]{./figures/c4_search_strategy2.jpg}
+        \includegraphics[width=0.9\textwidth]{./figures/c4_search_strategy2.jpg}
         \centerline{\small (b) 对路径三元组的剪枝或融合策略}
         \caption{ 1个搜索策略的示例}
         \label{fig.c4_search_strategy}
@@ -331,10 +331,10 @@
 
         如表格\ref{tab.c4_icdar13}所示，在自然场景文字图片数据集ICDAR 2013 上，一些最先进的文字检测方法例如Cho\cite{Cho2016Canny} 的方法取得了81.1\%的检测F 值，而我们的方法的检测F 值能达到82.3\%。其中，本章提出的方法取得了75.5\% 的查准率以及高达89.2\% 的查全率。本方法的查全率远高于其它先进的文字检测方法的查全率，原因就在于文本行的二叉树型搜索空间的建立，以及最优文本行搜索策略的执行。
 
-        值得注意的是本章提出的方法是一种快速的文字检测算法，与Tian\cite{Tian2016Text} 的基于CNN 的文字检测子相比，本方法消耗的是极小的计算量和时间。在ICDAR 2013的数据集中，平均的图像尺寸大约是1200乘以900 个像素大小。而本章提出的方法平均处理一张图像大概只用0.76 秒左右，这其中包括了基于边缘骨架的文字检测子，统计边缘响应以及基于二叉树型搜索空间搜索的文本行优化等步骤的全过程。此外，与我们在上一章提出的方法即He\cite{He2017scene}的文字检测方法相比，本章新提出的基于二叉树搜索的文本行矫正方法，又使F 值提升了近2\%，由此证明该方法的确增强了文字检测的查全效果及查准效果。
+        值得注意的是本章提出的方法是一种快速的文字检测算法，与Tian\cite{Tian2016Text} 的基于CNN 的文字检测子相比，本方法消耗的是极小的计算量和时间。在ICDAR 2013 的数据集中，平均的图像尺寸大约是1200乘以900 个像素大小。而本章提出的方法平均处理一张图像大概只用0.76 秒左右，这其中包括了基于边缘骨架的文字检测子，统计边缘响应以及基于二叉树型搜索空间搜索的文本行优化等步骤的全过程。此外，与我们在上一章提出的方法即He\cite{He2017scene}的文字检测方法相比，本章新提出的基于二叉树搜索的文本行矫正方法，又使F 值提升了近2\%，由此证明该方法的确增强了文字检测的查全效果及查准效果。
 
         \begin{table*}[!h]
-        \small
+        %\small
         \centering
         \caption{在ICDAR 2013上的文字检测效果(\%)}
         \begin{tabular}{p{0.25\textwidth}p{0.25\textwidth} p{0.25\textwidth} p{0.13\textwidth}}
@@ -360,7 +360,7 @@
         如表\ref{tab.c4_icdar11}所示，在ICDAR 2011 文字测试数据集上，本章提出的基于二叉树搜索的文字检测方法与上一章提出的He\cite{He2017scene} 的方法，以及其它最先进的的文字检测方法如Cho\cite{Cho2016Canny}、Sung\cite{Sung2015Scene} 等的方法都进行了字符提取数目和检出率的量化对比。从实验结果上来看，本章提出的方法可以在获得最高文字检出率的同时，保证提取的字符数目最少。该实验说明表明，相对于其它先进文字检测方法而言，本章方法都达到更优的文字查全和查准效果的折衷。
 
         \begin{table*}[!h]
-        \small
+        %\small
         \centering
         \caption{在ICDAR 2011测试集上对于字符提取数目和检出率的测评}
         \begin{tabular}{p{0.35\textwidth} p{0.35\textwidth} p{0.2\textwidth}}
@@ -382,24 +382,24 @@
         \label{tab.c4_icdar11}
         \end{table*}
 
-        图\ref{fig.c4_recall_proposals}展示的是在本章提出方法的各阶段中，字符检出率与候选字符提取数目的关系折线图。与上一章提出的He\cite{He2017scene} 的方法相比，本章的方法在基于边缘骨架切割的文字检测子的基础上，融入了基于二叉树型搜索空间搜索的文本行定位优化方法。其中，基于二叉树搜索的文本行矫正进一步减少了非文字候选字符的提取数目，同时却提升了候选字符的查全效果。因此本章方法相对上一章方法，字符检出率增高2\%，且提取的候选字符数目能降低10\%。
+        %图\ref{fig.c4_recall_proposals}展示的是在本章提出方法的各阶段中，字符检出率与候选字符提取数目的关系折线图。与上一章提出的He\cite{He2017scene} 的方法相比，本章的方法在基于边缘骨架切割的文字检测子的基础上，融入了基于二叉树型搜索空间搜索的文本行定位优化方法。其中，基于二叉树搜索的文本行矫正进一步减少了非文字候选字符的提取数目，同时却提升了候选字符的查全效果。因此本章方法相对上一章方法，字符检出率增高2\%，且提取的候选字符数目能降低10\%。
 
-        \begin{figure}[!h]
-        \centering
-        \includegraphics[width=0.8\textwidth]{./figures/c4_recall_proposals.jpg}
-        \caption{在ICDAR 2011 数据集上，本方法在各阶段中的文字检测查全与候选字符提取数目间的关系折线图: (a) 候选文字边缘骨架提取， (b) 文字边缘骨架切割， (c) 文字边缘骨架过滤， (d) 候选文本行定位， (e)非极大值抑制， (f) 基于二叉树搜索的文本行优化。}
-        \label{fig.c4_recall_proposals}
-        \end{figure}
+        %\begin{figure}[!h]
+        %\centering
+        %\includegraphics[width=0.8\textwidth]{./figures/c4_recall_proposals.jpg}
+        %\caption{在ICDAR 2011 数据集上，本方法在各阶段中的文字检测查全与候选字符提取数目间的关系折线图: (a) 候选文字边缘骨架提取， (b) 文字边缘骨架切割， (c) 文字边缘骨架过滤， (d) 候选文本行定位， (e)非极大值抑制， (f) 基于二叉树搜索的文本行优化。}
+        %\label{fig.c4_recall_proposals}
+        %\end{figure}
 
         在第\ref{sec.c4_searching strategies} 节基于二叉树搜索的文本行优化的搜索策略中，我们详细探讨过自然场景文字检测与识别之间的紧密关系。其中，依据文字识别的成绩，文字检测的结果才能更准确的定位到文本行的位置。而反过来，更准确的文字检测结果，也会进一步的增强文字识别的精度。
 
         因此，我们也将本章提出的方法与其他方法在各场景文字图片数据集上做了识别成绩的对比实验，如表\ref{tab.c4_recognition} 所示。在所有的数据集上，本章提出的方法的端对端识别成绩都高于其它所有方法。在SVT-50 数据集上，由Jaderberg\cite{Jaderberg2016Reading} 提出的端对端识别模型获得了P/R/F(查准/查全/F值)分别为0.85/0.68/0.76的识别分数，而本章方法在这个成绩基础上继续提升5\%从而达到0.86/0.67/0.77的识别成绩。同样在IC03 的各种词典配置的数据集上(IC03-50，IC03-FULL 和 IC03)，本章方法相对于其它先进方法对F 值的提升均在2\%左右，最终达到P/R/F分别为0.96/0.87/0.92的识别分数。
 
         \begin{table*}[!h]
-        \small
+        %\small
         \centering
         \caption{本章提出方法与其它先进方法的端对端文字识别成绩}
-        \begin{tabular}{p{0.12\textwidth} p{0.1\textwidth} p{0.1\textwidth} p{0.1\textwidth} p{0.1\textwidth} p{0.1\textwidth} p{0.05\textwidth} p{0.1\textwidth} }
+        \begin{tabular}{p{0.2\textwidth} p{0.1\textwidth} p{0.15\textwidth} p{0.08\textwidth} p{0.1\textwidth} p{0.05\textwidth} p{0.05\textwidth} p{0.05\textwidth} }
         %\hline
         \toprule
         方法 & IC03-50 & IC03-FULL & IC03 & SVT-50 & SVT & IC11 & IC13  \\

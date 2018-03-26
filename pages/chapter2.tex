@@ -32,10 +32,9 @@
 
     大部分基于区域的方法一般都会利用滑动窗来获取候选的包含文字的局部图像区域，因此在有些方法中也称其为基于滑动窗的文字检测算法。如图\ref{fig.c2_region_based} 所示，这是1 个典型的基于区域的文字检测方法的步骤示例。在该步骤示例中，首先利用滑动窗来得到局部图像区域以作为候选区域，然后提取区域中的颜色、纹理等视觉特征，最后结合分类器以进行文字与非文字区域的分类判别，输出结果是检测出来的文字区域。
 
-
     \begin{figure*}[!h]
     \centering
-    \includegraphics[width=0.8\textwidth]{c2_region_based.jpg}
+    \includegraphics[width=\textwidth]{c2_region_based.jpg}
     \caption{基于区域的文字检测方法的步骤示意图}
     \label{fig.c2_region_based}
     \end{figure*}
@@ -80,10 +79,10 @@
     Zhang等\cite{Zhang2015Symmetry} 提出一种利用滑动窗提取对称性特征的文字检测算法。该方法首先设计1 个对称性计算模板来计算滑动窗口内区域的梯度直方图、局部二值模式LBP 以及颜色等特征的相似度，然后将这些特征输入随机森林分类器从而得到每个像素属于文本行对称轴的概率图。接着把概率图上概率相近的像素集中形成文本行对称轴并用CRF 进行更准确的分类。然后在此基础上利用窗口尺寸生成候选文本行并作多个尺度上的文本行的投影融合。最后采用训练好的CNN 分类器去掉非文字的图像区域。从这个方法的实验结果来看，利用深度学习来分类候选文本行区域，可将其中真实的文字部分精准的辨别出来，因而能较大程度的提高文本检测的成绩。
 
     \begin{table*}[!h]
-    \small
     \centering
     \caption{基于区域的相关文字检测方法}
-    \begin{tabular}{p{0.2\textwidth} p{0.2\textwidth} p{0.5\textwidth}}
+    %\small
+    \begin{tabular}{p{0.17\textwidth} p{0.1\textwidth} p{0.63\textwidth}}
     %\hline
     \toprule
     作者 & 年份 & 方法概述 \\
@@ -108,7 +107,7 @@
 
     \begin{figure*}[!h]
     \centering
-    \includegraphics[width=0.8\textwidth]{c2_cca_based.jpg}
+    \includegraphics[width=\textwidth]{c2_cca_based.jpg}
     \caption{基于连通部件的文字检测方法的步骤示意图}
     \label{fig.c2_cca_based}
     \end{figure*}
@@ -155,10 +154,10 @@
     接下来Neumann又在方法\cite{Neumann2012Real} 中反过来利用极值区域ER取代MSER 以提取候选文字的连通部件，这是因为MSER 对于一些模糊或光照过强的场景太敏感而漏检掉了候选文字部件，但ER 却可以尽可能多的考虑到所有的连通部件，因为ER 本来涵盖了MSER 中所有的结果。生成ER 树的过程如图\ref{fig.c2_er_tree}(b)所示，其原理类似于图\ref{fig.c2_er_tree}(a)的分水岭算法。在这类算法中，主要是利用ER树提取候选的文字部件，然后求取连通部件的空洞面积、欧拉数、水平交叉数目以及紧密度等特征，来训练SVM 分类器以分类背景和文字。最后通过穷举搜索以将保留下来的连通部件排列成单词结果。
 
     \begin{table*}[!h]
-    \small
+    %\small
     \centering
     \caption{基于连通部件的相关文字检测方法}
-    \begin{tabular}{p{0.2\textwidth} p{0.2\textwidth} p{0.5\textwidth}}
+    \begin{tabular}{p{0.17\textwidth} p{0.1\textwidth} p{0.63\textwidth}}
     %\hline
     \toprule
     作者 & 年份 & 方法概述 \\
@@ -174,7 +173,7 @@
     \label{tab.c2_connected_component_based}
     \end{table*}
 
-    表格\ref{tab.c2_connected_component_based} 总结了基于连通部件的相关文字检测方法。基于连通部件的方法来提取候选文字的计算量要远远低于基于滑动窗的方法，因此这类方法的处理时间大为缩短，并且其检测到的结果可直接应用到识别文字的阶段。但基于连通部件的方法在曝光或低对比度环境中难以从背景中分离出连通区域，并且过于依赖图像分割算法的结果。Neumann 等\cite{Neumann2010A,Neumann2011Text,Neumann2012Real} 提出的MSER是其中的一大主流方法，该方法取得了不错的文字检测效果。但MSER也存在一些问题，如遭遇反光问题会失效、提取ER 时的重复和嵌套问题、以及过滤ER 时的固定阈值问题。因此目前在利用MSER 时大多先用一些其它方法作预处理以提高文字检测算法的鲁棒性。另一类主流的方法是如Yu 等\cite{Yu2016Scene} 提出的基于边缘的文字检测框架。这类方法比较依赖边缘检测的效果，因此我们还用Dollar 等\cite{Dollar2015Fast} 提出的结构化边缘检测子取代了常用的Canny 边缘检测算法。通过分析发现基于边缘的文字检测的最核心的问题是：若存在背景与文字边缘粘连问题，或不能完整提取文字边缘时，就很难进行后续的文字检测的分析，并造成漏检问题。
+    表格\ref{tab.c2_connected_component_based} 总结了基于连通部件的相关文字检测方法。基于连通部件的方法来提取候选文字的计算量要远远低于基于滑动窗的方法，因此这类方法的处理时间大为缩短，并且其检测到的结果可直接应用到识别文字的阶段。但基于连通部件的方法在曝光或低对比度环境中难以从背景中分离出连通区域，并且过于依赖图像分割算法的结果。Neumann 等\cite{Neumann2010A,Neumann2011Text,Neumann2012Real} 提出的MSER是其中的一大主流方法，该方法取得了不错的文字检测效果。但MSER 也存在一些问题，如遭遇反光问题会失效、提取ER 时的重复和嵌套问题、以及过滤ER 时的固定阈值问题。因此目前在利用MSER 时大多先用一些其它方法作预处理以提高文字检测算法的鲁棒性。另一类主流的方法是如Yu 等\cite{Yu2016Scene} 提出的基于边缘的文字检测框架。这类方法比较依赖边缘检测的效果，因此我们还用Dollar 等\cite{Dollar2015Fast} 提出的结构化边缘检测子取代了常用的Canny 边缘检测算法。通过分析发现基于边缘的文字检测的最核心的问题是：若存在背景与文字边缘粘连问题，或不能完整提取文字边缘时，就很难进行后续的文字检测的分析，并造成漏检问题。
 
     \section{本章小结}
     \esection{Brief Summary}
