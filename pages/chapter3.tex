@@ -154,7 +154,7 @@
         \esubsection{Text adhesion-junctions' detection and cutting}
         \label{sec.c3_skeleton_cut}
 
-        生成边缘骨架图后，就可以通过8 连通区域的像素点数分析来检测边缘骨架粘连点。检测边缘骨架粘连点$J$ 的公式如下所示：
+        生成边缘骨架图后，就可以通过8 连通区域的像素点数分析来检测边缘骨架粘连点。检测边缘骨架粘连点$J$ 的公式如公式\ref{eq:c3_junctions}所示：
 
         \begin{equation}
         J=\left\{ p|n(p)=\sum_{k=1}^8x_k>t \right\},
@@ -324,25 +324,21 @@
 
         为了验证本章提出的文字检测子的效果，将该检测子运行在自然场景文字测试集ICDAR 2013 上。这个测试集合包含462 张标注的自然场景文字图片，其中有229 张图片用以训练，而233 张图片用于测试。该测试集合非常具有挑战性：因为图片存在光照不均、尺度不同(尺度范围从$459 \times 405$ 到$3888 \times 2592$) 的问题，而且文字也存在不同字体和颜色的问题。此外还利用了MSRA-TD500 测试数据集来验证本方法在多方向和多语种文字图像样本上的检测效果。最终使用Wolf 等\cite{Wolf2006Object} 提出的评价标准来验证本方法的文字检测结果。评价标准利用到了查全（recall），查准（precision） 和f 值等概念，这些概念来源于信息检索领域(Information Retrieval,IR)。
 
-        其中查全率（recall）代表的含义是真值（ground truth）中的东西被提取出来的比例：
-        
+        其中查全率（recall）代表的含义是真值（ground truth）中的东西被提取出来的比例，如公式\ref{eq.c3_R}所示：      
         \begin{equation}
         recall=\frac{N.o. \quad True Positives}{N.o. \quad Ground truth}
+        \label{eq.c3_R}
         \end{equation}
-
-        而查准（precision）表示检测到的东西是正确的比例：
-        
+        而查准（precision）表示检测到的东西是正确的比例，如公式\ref{eq.c3_P}所示：
         \begin{equation}
         precision=\frac{N.o. \quad True Positives}{N.o. \quad Retrieved Items}
+        \label{eq.c3_P}
         \end{equation}
-
-        其中，符号N.o是数量Number of 的首字母缩写。最后综合指标F-mean （也可记为F-score）是查全（recall）和查准（precision）的调和平均数（Harmonic mean）,该指标用以衡量算法的综合性能：
-        
+        其中，符号N.o是数量Number of 的首字母缩写。最后综合指标F-mean （也可记为F-score）是查全（recall）和查准（precision）的调和平均数（Harmonic mean）,该指标用以衡量算法的综合性能，如公式\ref{eq.c3_F}所示：
         \begin{equation}
         F=\frac{2}{\frac{1}{recall}+\frac{1}{precision}}=\frac{2recall*precsion}{recall+precision}
         \label{eq.c3_F}
         \end{equation}
-
         文字检测算法也会引入查全和查准来衡量算法性能，但存在3 项复杂性：
 
         1）文字或目标检测与信息检索（IR）的不同：设文字检测方法结果和真值（ground truth）中的定位包围盒（bounding box）分别用$D_i$ 和$G_j$ 表示，那么就判断$D_i$ 是否为true positive而言，文字检测要比信息检索(IR)更为困难。这是因为在文字检测中，存在1个$D_i$ 和多个$G_j$ 匹配的情况，因此其用作正确性判断的匹配方法是soft （匹配值是由0 到1 之间的1 个分数）和非一对一的匹配。
@@ -357,8 +353,7 @@
         \label{fig.c3_evalu_bbox_match}
         \end{figure*}
 
-        其中ICDAR2003数据集采用的就是1对1的匹配方式\cite{Mariano2002Performance}，这种匹配方式最为简洁，其计算过程如公式\ref{eq.c3_match_1v1} 所示：都使用了BestMatch 来计算查全率和查准率。
-        
+        其中ICDAR2003数据集采用的就是1对1的匹配方式\cite{Mariano2002Performance}，这种匹配方式最为简洁，其计算过程如公式\ref{eq.c3_match_1v1} 所示：都使用了BestMatch 来计算查全率和查准率。    
         \begin{equation}
         \left\{
         \begin{array}{c}
@@ -367,10 +362,8 @@
         \end{array}
         \right.
         \label{eq.c3_match_1v1}
-        \end{equation}
-        
-        给定1个定位包围盒b，假设b是某一个包围盒真实值$G_i$，并且给定另外1 个包围盒的序列B，假设B是文字检测算法的定位结果D，那么如公式\ref{eq.c3_1v1_bestmatch}所示，算法BestMatch 表示的是b在集合B中的匹配得分，并会得到从0到1 之间的1 个数值：当集合B中存在1 个和b几乎完全重合的包围盒时值为1；相反当b 同B种的包围盒不存在任何的重合时值为0。
-        
+        \end{equation}     
+        给定1个定位包围盒b，假设b是某一个包围盒真实值$G_i$，并且给定另外1 个包围盒的序列B，假设B是文字检测算法的定位结果D，那么如公式\ref{eq.c3_1v1_bestmatch}所示，算法BestMatch 表示的是b在集合B中的匹配得分，并会得到从0到1 之间的1 个数值：当集合B中存在1 个和b几乎完全重合的包围盒时值为1；相反当b 同B种的包围盒不存在任何的重合时值为0。      
         \begin{equation}
         \left\{
         \begin{array}{c}
@@ -379,23 +372,19 @@
         \end{array}
         \right.
         \label{eq.c3_1v1_bestmatch}
-        \end{equation}
-        
+        \end{equation}       
         上述这种1对1匹配的方式将问题进行了简化，使得计算方便简单，但也存在着问题：若文字定位的真实区域的标注粒度比较大时，如1 个包围盒中覆盖有多个单词，那么此时尽管文字检测算法可能正确定位出每个单词，但测评得到的检测分数依然会很低。那么针对这种问题，在ICDAR2013上采用的就是更新了的测评方法\cite{Wolf2006Object}:该方法同时就1 对1,1对多以及多对1的这几种状况进行了综合考虑。
 
-        在新的测评方法中，用两个矩阵$\sigma$ 和$\tau$ 来分别表示查全率和查准率，其计算公式如\ref{eq.c3_overlap_matrices} 所示：可见这两个矩阵的大小都是$|G|\times|D|$，其中1行就代表某一个文字真实区域包围盒$G_i$，而1列就代表文字检测算法的某一个定位结果$D_j$。
-        
+        在新的测评方法中，用两个矩阵$\sigma$ 和$\tau$ 来分别表示查全率和查准率，其计算公式如\ref{eq.c3_overlap_matrices} 所示：可见这两个矩阵的大小都是$|G|\times|D|$，其中1行就代表某一个文字真实区域包围盒$G_i$，而1列就代表文字检测算法的某一个定位结果$D_j$。      
         \begin{equation}
         \sigma_{ij}=R(G_i,D_j),\tau_{ij}=P(G_i,D_j)
         \label{eq.c3_overlap_matrices}
-        \end{equation}
-        
-        这两个矩阵被称为重合矩阵（overlap matrices），若$G_i$与$D_j$之间存在重合那么在重合矩阵的第i 行、第j列上的元素即为大于0的数值。而当满足下列条件时，真实文字区域$G_i$与检测到的文字区域$D_j$ 就是匹配的。
-        
+        \end{equation}       
+        这两个矩阵被称为重合矩阵（overlap matrices），若$G_i$与$D_j$之间存在重合那么在重合矩阵的第i 行、第j 列上的元素即为大于0的数值。而当满足条件\ref{eq.c3_T}时，真实文字区域$G_i$ 与检测到的文字区域$D_j$ 就是匹配的。
         \begin{equation}
         \sigma_{ij}>t_r,\tau_{ij}>t_p
-        \end{equation}
-        
+        \label{eq.c3_T}
+        \end{equation}       
         其中$t_r$和$t_p$分别是$\sigma_{ij}$和$\tau_{ij}$的阈值，且$t_r,t_p \in [0,1]$。则在新的测评方法中，三种匹配方式有以下定义：
 
         1）一个真实区域$G_i$只和1个检测区域$D_j$ 匹配，也就是1对1的匹配。这种匹配方式要满足的条件是：$G_i$的大部分只能被$D_j$检测出来，即$\sigma_{ij} \ge t_r$；且只有$D_j$对$G_i$的查准率符合要求，即$\tau_{ij} \ge t_p$。
@@ -404,8 +393,7 @@
 
         3）一个算法检测到的区域$D_j$与真实区域集合G的子集$G_o$匹配，即多对1的匹配。满足条件为：$G_o$中的每个区域都有一部分能被检测到，即$\sigma_{ij} \ge t_r,\forall i \in G_o$；而且$D_j$也以一定的精度检测到了$G_o$，也就是$\sum_{i \in G_o} \tau_{ij} \ge t_p$。
 
-        根据上述规则，就可以定义在不同类型匹配情况下的匹配度$Match_G(G_i,D,t_r,t_p)$以及$Match_D(D_j,G,t_r,t_p)$，并得到最终的测评指标$R(G,D,t_r,t_p)$和$P(G,D,t_r,t_p)$，如公式\ref{eq.c3_R_P}所示。
-        
+        根据上述规则，就可以定义在不同类型匹配情况下的匹配度$Match_G(G_i,D,t_r,t_p)$以及$Match_D(D_j,G,t_r,t_p)$，并得到最终的测评指标$R(G,D,t_r,t_p)$和$P(G,D,t_r,t_p)$，如公式\ref{eq.c3_R_P}所示。       
         \begin{equation}
         \left\{
         \begin{array}{c}
@@ -415,7 +403,6 @@
         \right.
         \label{eq.c3_R_P}
         \end{equation}
-
         那么在求得查准和查全后，F值也能依据公式 \ref{eq.c3_F}计算得到。
 
         \subsection{实验结果与分析}
@@ -454,7 +441,7 @@
         %\small
         \centering
         \caption{在ICDAR 2011测试集上对于字符提取数目和检出率的测评}
-        \begin{tabular}{p{0.35\textwidth} p{0.35\textwidth} p{0.2\textwidth}}
+        \begin{tabular}{p{0.38\textwidth} p{0.38\textwidth} p{0.15\textwidth}}
         %\hline
         \toprule
         方法 & 候选字符数目 & 检出率 \\
