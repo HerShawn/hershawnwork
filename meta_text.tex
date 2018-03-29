@@ -82,7 +82,7 @@
 
 自然场景图像中的文字检测是一项极具挑战性的工作，其难点主要体现在：复杂的自然场景中存在遮挡、阴影、对比度低等环境的影响；文字自身存在排列方向、大小、语种、颜色、字体等方面的多样性变化；场景图像被采集时因光照等环境条件影响而导致的退化和失真等质量欠佳问题。本文针对场景文字检测存在的问题对现有方法进行调研和分析，并提出下面两种有效的场景文字检测方法。
 
-首先针对边缘粘连问题，本文提出了一种基于边缘骨架切割的文字检测方法。该方法首先利用结构化边缘检测方法得到边缘响应图，然后在每个二值边缘图上通过细化操作得到其边缘骨架图，并通过8领域内像素点分析所找到的边缘骨架结点。接着断开粘连点以获得候选文字边缘骨架，再经过形态学滤除来过滤掉大部分明显不是文字的边缘骨架，剩余的不易区分的非文字边缘骨架，可通过基于CNN的分类器来进一步滤除。最后基于非极大值抑制和文本行聚集操作，得到文本行定位结果。
+首先针对边缘粘连问题，本文提出了一种基于边缘骨架切割的文字检测方法。该方法首先利用结构化边缘检测方法得到边缘响应图，然后在每个二值边缘图上通过细化操作得到其边缘骨架图，并通过8领域内像素点分析找到边缘骨架结点。接着断开粘连点以获得候选文字边缘骨架，再经过形态学滤除来过滤掉大部分明显不是文字的边缘骨架，剩余的不易区分的非文字边缘骨架，可通过基于CNN的分类器来进一步滤除。最后基于非极大值抑制和文本行聚集操作，得到文本行定位结果。
 
 针对文本行定位不够精准的问题，本文提出一种基于二叉树搜索的文本行定位矫正方法。该方法首先对候选文字包围盒计算统计边缘响应，接着对求取到的统计边缘响应进行水平投影、求取梯度以及执行非极大值抑制等操作，以获得候选文本行。最后由生成的候选文本行中建立起二叉树型的搜索空间，并根据优化策略从搜索空间中找到最优的文本行定位结果。该结果即是经过优化后得到的文字细致定位结果，相比于边缘骨架切割文字检测子的粗略定位结果而言文字检测精度得到提升。
 
@@ -103,6 +103,6 @@ Firstly, the skeleton-cut method is proposed to solve the edge-adhesion problem.
 
  A text line rectification method based on binary tree search is proposed to locate the text more accurately . First the static skeleton-box response is calculated form the candidate text bounding boxes , and then the candidate text lines are obtained form the response by horizontal projection, gradient and non maximum suppression operation. Finally, the binary-tree-based search space is built from candidate text lines, and the optimal result is found from the search space according to the optimization strategy.
 
-The two methods proposed in this paper are compared with the related methods on ICDAR2011, ICDAR2013 and MSRA-TD500 test set respectively, and the experimental results prove the robustness of our methods. In addition, this paper also get the results of the proposed methods on the more challenging SVT dataset, which proves the practicability and reliability of the algorithm.
+The two methods proposed in this thesis are compared with the related methods on ICDAR2011, ICDAR2013 and MSRA-TD500 test set respectively, and the experimental results prove the robustness of our methods. In addition, this paper also get the results of the proposed methods on the more challenging SVT dataset, which proves the practicability and reliability of the algorithm.
 
 }
