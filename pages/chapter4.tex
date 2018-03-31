@@ -86,6 +86,9 @@
 
         首先提出统计边缘响应方法，用以增强文本与背景之间的响应强度差异。给定如图\ref{fig.c4_static_skeleton_response}(a) 所示的场景文字图像$g$，计算其统计边缘响应$s$ 的方式如算法\ref{alg:c4_static_skeleton_response} 所示：
 
+        %\begin{table*}[!h]
+        \qquad \qquad \qquad \qquad 算法2 \quad 统计边缘响应
+        %\end{table*}
         \begin{algorithm} \renewcommand{\algorithmicrequire}{\textbf{输入:}}	\renewcommand{\algorithmicensure}{\textbf{输出:}}
     	\caption{统计边缘响应}
     	\label{alg:c4_static_skeleton_response}
@@ -184,6 +187,11 @@
 
     在明确候选文本行分割线$L$，以及二叉树型搜索空间$N$ 中各变量的含义后，由$L$ 构建$N$ 的过程如算法\ref{alg:c4_build_binary_tree} 所示：
 
+    \clearpage
+    \begin{table*}[!h]
+    \qquad \qquad \qquad \qquad 算法3 \quad 递归地建立二叉树型搜索空间
+    \end{table*}
+
     \begin{algorithm}[!h]
 	\renewcommand{\algorithmicrequire}{\textbf{输入:}}
 	\renewcommand{\algorithmicensure}{\textbf{输出:}}
@@ -212,6 +220,8 @@
     \end{algorithm}
 
     那么，通过算法\ref{alg:c4_build_binary_tree} 从$L$ 中构建好的二叉树型搜索空间$N$就将存储在如图中的表格内。下一节，将介绍从搜索空间$N$ 中搜寻出最优文本行定位的搜索策略。
+
+
 
     \section{搜索最优的文字行定位}
     \esection{Searching the optimal text detection}
@@ -374,7 +384,7 @@
         Sung\cite{Sung2015Scene} & 93,357 & 0.877  \\
         Cho\cite{Cho2016Canny} & 8,121 & 0.874 \\
         He\cite{He2017scene} & 8,231 & 0.879 \\
-        \hline
+        %\hline
         \textbf{Proposed} & \textbf{7,137} & \textbf{0.892} \\
         %\hline
         \bottomrule
