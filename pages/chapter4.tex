@@ -28,7 +28,7 @@
     \section{问题的提出}
     \esection{Questions Posed}
 
-    虽然上一章提出的基于边缘骨架切割的文字检测子取得了很高的查全率，但是定位到的文字包围盒的重叠可能达不到要求，而导致文字定位不够精准。尽管重叠率为0.5对于一般目标检测的结果而言是正常的，但对于场景文字检测和识别来说，这种程度的重叠率是不能令人满意的。尤其是当文字包围盒的一个边界被精确地预测到，但另一个边界与ground truth 的差距很大时，重叠率依然可能达到0.5以上，但此时的文字定位效果非常差。如图\ref{fig.c4_overlap}所示，这两个预测的文字包围盒均与真实值达到了0.5之上的重叠面积，且有一条边界（宽或高）是被精确预测到了，但是对于文字来说这种程度的重叠率所检测到的是残缺了很大一部分的结果，因此不能满足文字检测的要求，更无法用作文字识别的输入。但难点是这两个包围盒中都包含有一部分文字，因此它们在上一章方法里的分类器中都没有被过滤掉，故而造成图\ref{fig.c4_overlap} 的问题。
+    虽然上一章提出的基于边缘骨架切割的文字检测子取得了很高的查全率，但是定位到的文字包围盒的重叠可能达不到要求，而导致文字定位不够精准。尽管重叠率为0.5对于一般目标检测的结果而言是正常的，但对于场景文字检测和识别来说，这种程度的重叠率是不能令人满意的。尤其是当文字包围盒的一个边界被精确地预测到，但另一个边界与ground truth 的差距很大时，重叠率依然可能达到0.5以上，但此时的文字定位效果非常差。如图\ref{fig.c4_overlap} 所示，这两个预测的文字包围盒均与真实值达到了0.5之上的重叠面积，且有一条边界（宽或高）是被精确预测到了，但是对于文字来说这种程度的重叠率所检测到的是残缺了很大一部分的结果，因此不能满足文字检测的要求，更无法用作文字识别的输入。但难点是这两个包围盒中都包含有一部分文字，因此它们在上一章方法里的分类器中都没有被过滤掉，故而造成图\ref{fig.c4_overlap} 的问题。
 
     \begin{figure*}[!h]
     \centering
@@ -43,7 +43,7 @@
     \label{fig.c4_overlap}
     \end{figure*}
 
-    针对上述问题，本章提出一种基于二叉树搜索的文本行定位优化框架，用来调整候选文字包围盒与ground truth 的重叠率以提升文字检测和识别效果。该框架包含3个步骤：第1步是对所有的候选文字包围盒进行统计边缘响应（Static Skeleton-box Response，简称SSR算法），然后对计算得到的SSR求取梯度并执行NMS操作，以获得候选文本行；第2步是将候选文本行的所有可能的排列组合方式构建成一个二叉树型搜索空间；第3步是仿照二叉树的后续遍历算法从搜索空间中找到一条最优路径，该路径对应着优化后的文字定位包围盒。值得注意的是在搜索最优文字定位的过程中还利用到了文字识别的结果，而经过该算法调优后的文字定位结果又进一步提升识别文字的精度。本章接下来内容会详细论述这一优化框架。
+    针对上述问题，本章提出一种基于二叉树搜索的文本行定位优化框架，用来调整候选文字包围盒与ground truth 的重叠率以提升文字检测和识别效果。该框架包含3个步骤：第1步是对所有的候选文字包围盒进行统计边缘响应（Static Skeleton-box Response，简称SSR 算法），然后对计算得到的SSR求取梯度并执行NMS操作，以获得候选文本行；第2步是将候选文本行的所有可能的排列组合方式构建成一个二叉树型搜索空间；第3步是仿照二叉树的后续遍历算法从搜索空间中找到一条最优路径，该路径对应着优化后的文字定位包围盒。值得注意的是在搜索最优文字定位的过程中还利用到了文字识别的结果，而经过该算法调优后的文字定位结果又进一步提升识别文字的精度。本章接下来内容会详细论述这一优化框架。
 
     \section{方法原理与步骤}
     \esection{Principle and Summary of The Method}
@@ -84,24 +84,32 @@
         \subsection{统计边缘响应}
         \esubsection{Static Skeleton Response}
 
-        首先提出统计边缘响应方法，用以增强文本与背景之间的响应强度差异。给定如图\ref{fig.c4_static_skeleton_response}(a) 所示的场景文字图像$g$，计算其统计边缘响应$s$ 的方式如算法\ref{alg:c4_static_skeleton_response} 所示：
+        首先提出统计边缘响应方法，用以增强文本与背景之间的响应强度差异。给定如图\ref{fig.c4_static_skeleton_response}(a) 所示的场景文字图像$g$，计算其统计边缘响应$s$ 的方式如图\ref{fig.c4_ser}中算法2 所示：
+
+        %算法\ref{alg:c4_static_skeleton_response} 所示：
 
         %\begin{table*}[!h]
-        \qquad \qquad \qquad \qquad 算法2 \quad 统计边缘响应
+        %\qquad \qquad \qquad \qquad 算法2 \quad 统计边缘响应
         %\end{table*}
-        \begin{algorithm} \renewcommand{\algorithmicrequire}{\textbf{输入:}}	\renewcommand{\algorithmicensure}{\textbf{输出:}}
-    	\caption{统计边缘响应}
-    	\label{alg:c4_static_skeleton_response}
-    	\begin{algorithmic}[1]
-    		\REQUIRE 输入的场景文字图像$g$
-    		\ENSURE 图$g$相对应的统计边缘响应$s$
-            \STATE 在图$g$上利用基于边缘骨架切割的文字检测子得到粗略的定位结果：文字定位包围框集合$B$ 及其相应的置信度分数集合$C$
-    		\REPEAT
-            \STATE $rs:=\left\{ b \times c  |\,b \in B, c \in C\right\}$
-            \STATE $s:=s\cup rs,B:=B / b,C:=C / c$
-            \UNTIL{$B=\varnothing$}
-    	\end{algorithmic}
-        \end{algorithm}
+        %\begin{algorithm} \renewcommand{\algorithmicrequire}{\textbf{输入:}}	\renewcommand{\algorithmicensure}{\textbf{输出:}}
+    	%\caption{统计边缘响应}
+    	%\label{alg:c4_static_skeleton_response}
+    	%\begin{algorithmic}[1]
+    		%\REQUIRE 输入的场景文字图像$g$
+    		%\ENSURE 图$g$相对应的统计边缘响应$s$
+            %\STATE 在图$g$上利用基于边缘骨架切割的文字检测子得到粗略的定位结果：文字定位包围框集合$B$ 及其相应的置信度分数集合$C$
+    		%\REPEAT
+            %\STATE $rs:=\left\{ b \times c  |\,b \in B, c \in C\right\}$
+            %\STATE $s:=s\cup rs,B:=B / b,C:=C / c$
+            %\UNTIL{$B=\varnothing$}
+    	%\end{algorithmic}
+        %\end{algorithm}
+
+        \begin{figure*}[!h]
+        \centering
+        \includegraphics[width=\textwidth]{c4_ser.jpg}
+        \caption{统计边缘响应} \label{fig.c4_ser}
+        \end{figure*}
 
         其中$rs$指代的是响应小块，它的底面积是1 个定位包围框$b$，而高是$b$ 对应的置信度分数$c$。 将所有的这些响应小块$rs$ 堆叠在一起，就构成了如图\ref{fig.c4_static_skeleton_response}(b) 所示的统计边缘响应$s$。
 
@@ -185,41 +193,49 @@
 
     然后假设我们要构建的二叉树型搜索空间$N$ 是由一些结点$n$ 构成的。其中任一结点$n_i$ 有2 个对应的属性：结点代表的图像区域范围$nr_i$，以及结点的数值$nv_i$。以图\ref{fig.c4_binary_tree_construction}(a) 为例，节点$n_5$ 所代表的文本行区域范围是从线$l_3$ 到$l_5$ 之间的区域，而$n_5$ 的值是由$l_4$ 的置信度值$lc_4$ 赋予的。
 
-    在明确候选文本行分割线$L$，以及二叉树型搜索空间$N$ 中各变量的含义后，由$L$ 构建$N$ 的过程如算法\ref{alg:c4_build_binary_tree} 所示：
+    在明确候选文本行分割线$L$，以及二叉树型搜索空间$N$ 中各变量的含义后，由$L$ 构建$N$ 的过程如图\ref{fig.c4_build_binary_tree}中的算法3所示：
 
-    \clearpage
-    \begin{table*}[!h]
-    \qquad \qquad \qquad \qquad 算法3 \quad 递归地建立二叉树型搜索空间
-    \end{table*}
+    %算法\ref{alg:c4_build_binary_tree} 所示：
 
-    \begin{algorithm}[!h]
-	\renewcommand{\algorithmicrequire}{\textbf{输入:}}
-	\renewcommand{\algorithmicensure}{\textbf{输出:}}
-	\caption{递归地建立二叉树型搜索空间}
-	\label{alg:c4_build_binary_tree}
-	\begin{algorithmic}[1]
-		\REQUIRE 分割线 $L$ 的距离 $LD=\left\{ld_1,ld_2,...,ld_m\right\}$ 和置信度$LC=\left\{lc_1,lc_2,...,lc_m\right\}$
-		\ENSURE 二叉树型搜索空间 $N$ 的结点范围 $NR=\left\{nr_1,nr_2,...,nr_{2m-3}\right\}$, 和结点的值 $NV=\left\{nv_1,nv_2,...,nv_{2m-3}\right\}$
-      \STATE 初始化: \\
-      \STATE \quad $i=0, \quad BuildBinaryTree(i,LD,LC)$
-      \STATE function $BuildBinaryTree(i,LD,LC)$
-        \\\STATE \quad $i=i+1$
-        \\\STATE \quad $if \quad length(LD)==2 \quad then$
-        \\\STATE \qquad $nr_{i}=[LD[1],LD[2]], nv_{i}=0$
-        \\\STATE \qquad $return$
-        \\\STATE \quad $end \ if$
-        \\\STATE \quad $nr_{i}=[LD[1],LD[end]], nv_{i}=max(LC)$
-        \\\STATE \quad $//$假设$LC$中的最大值是$lc_t$，其中$t$ 是$lc_t$ 的索引
-        \\\STATE \quad $//$在索引$t$处将$L$ 分裂成左子集和右子集
-        \\\STATE \quad $LD_{l}=\left\{LD[1],...,LD[t]\right\}, LC_{l}=\left\{LC[1],...,LC[t]\right\}$
-        \\\STATE \quad $BuildBinaryTree(i,LD_{l},LC_{l})$
-        \\\STATE \quad $LD_{r}=\left\{LD[t],...,LD[end]\right\}, LC_{r}=\left\{LC[t],...,LC[end]\right\}$
-        \\\STATE \quad $BuildBinaryTree(i,LD_{r},LC_{r})$
-      \STATE end function
-	\end{algorithmic}
-    \end{algorithm}
+    %\clearpage
+    %\begin{table*}[!h]
+    %\qquad \qquad \qquad \qquad 算法3 \quad 递归地建立二叉树型搜索空间
+    %\end{table*}
 
-    那么，通过算法\ref{alg:c4_build_binary_tree} 从$L$ 中构建好的二叉树型搜索空间$N$就将存储在如图中的表格内。下一节，将介绍从搜索空间$N$ 中搜寻出最优文本行定位的搜索策略。
+    %\begin{algorithm}[!h]
+	%\renewcommand{\algorithmicrequire}{\textbf{输入:}}
+	%\renewcommand{\algorithmicensure}{\textbf{输出:}}
+	%\caption{递归地建立二叉树型搜索空间}
+	%\label{alg:c4_build_binary_tree}
+	%\begin{algorithmic}[1]
+		%\REQUIRE 分割线 $L$ 的距离 $LD=\left\{ld_1,ld_2,...,ld_m\right\}$ 和置信度$LC=\left\{lc_1,lc_2,...,lc_m\right\}$
+		%\ENSURE 二叉树型搜索空间 $N$ 的结点范围 $NR=\left\{nr_1,nr_2,...,nr_{2m-3}\right\}$, 和结点的值 $NV=\left\{nv_1,nv_2,...,nv_{2m-3}\right\}$
+      %\STATE 初始化: \\
+      %\STATE \quad $i=0, \quad BuildBinaryTree(i,LD,LC)$
+      %\STATE function $BuildBinaryTree(i,LD,LC)$
+      %  \\\STATE \quad $i=i+1$
+      %  \\\STATE \quad $if \quad length(LD)==2 \quad then$
+      %  \\\STATE \qquad $nr_{i}=[LD[1],LD[2]], nv_{i}=0$
+      %  \\\STATE \qquad $return$
+      %  \\\STATE \quad $end \ if$
+      %  \\\STATE \quad $nr_{i}=[LD[1],LD[end]], nv_{i}=max(LC)$
+      %  \\\STATE \quad $//$假设$LC$中的最大值是$lc_t$，其中$t$ 是$lc_t$ 的索引
+      %  \\\STATE \quad $//$在索引$t$处将$L$ 分裂成左子集和右子集
+       % \\\STATE \quad $LD_{l}=\left\{LD[1],...,LD[t]\right\}, LC_{l}=\left\{LC[1],...,LC[t]\right\}$
+      %  \\\STATE \quad $BuildBinaryTree(i,LD_{l},LC_{l})$
+      %  \\\STATE \quad $LD_{r}=\left\{LD[t],...,LD[end]\right\}, LC_{r}=\left\{LC[t],...,LC[end]\right\}$
+      %  \\\STATE \quad $BuildBinaryTree(i,LD_{r},LC_{r})$
+      %\STATE end function
+	%\end{algorithmic}
+    %\end{algorithm}
+
+   \begin{figure*}[!h]
+   \centering
+   \includegraphics[width=\textwidth]{c4_build_binary_tree.jpg}
+   \caption{递归地建立二叉树型搜索空间} \label{fig.c4_build_binary_tree}
+   \end{figure*}
+
+    那么，通过算法3从$L$ 中构建好的二叉树型搜索空间$N$就将存储在如图中的表格内。下一节，将介绍从搜索空间$N$ 中搜寻出最优文本行定位的搜索策略。
 
 
 
@@ -229,44 +245,50 @@
         \subsection{搜索路径}
         \esubsection{Searching the paths}
 
-        给定二叉树型搜索空间$N$,假设$N$是由$m$ 个结点$n$ 构成，那么通过算法\ref{alg:c4_binary_tree_search}，就可搜索出路径$P={p_1,p_2,...,p_{(m-1)/2}}$。 路径中的每个$p_i \in P$ 都是1个3元组：包含了父亲结点$np_i$，左子结点$nl_i$ 和右子结点$nr_i$。
+        给定二叉树型搜索空间$N$,假设$N$是由$m$ 个结点$n$ 构成，那么通过图\ref{fig.c4_algori_bts}中的算法4，就可搜索出路径$P={p_1,p_2,...,p_{(m-1)/2}}$。 路径中的每个$p_i \in P$ 都是1个3元组：包含了父亲结点$np_i$，左子结点$nl_i$ 和右子结点$nr_i$。
 
-        \begin{algorithm}[!h]
-    	\renewcommand{\algorithmicrequire}{\textbf{输入:}}	
-        \renewcommand{\algorithmicensure}{\textbf{输出:}}
-    	\caption{从二叉树型搜索空间中找到最优路径}
-    	\label{alg:c4_binary_tree_search}
-    	\begin{algorithmic}[1]
-    		\REQUIRE 二叉树型搜索空间 $N=\left\{n_1,n_2,...,n_m\right\}$， 其中每个结点$n_x \in N$有其相应的属性: 范围$nr_x$ 和值$nv_x$
-    		\ENSURE 搜索到的路径 $P=\left\{p_1,p_2,...,p_{(m-1)/2}\right\}$， 其中每条路径$p_{i} \in P$ 包含结点三元组$p_{i}=\left\{np_{i},nl_{i},nr_{i}\right\}$
+        %\begin{algorithm}[!h]
+    	%\renewcommand{\algorithmicrequire}{\textbf{输入:}}	
+        %\renewcommand{\algorithmicensure}{\textbf{输出:}}
+    	%\caption{从二叉树型搜索空间中找到最优路径}
+    	%\label{alg:c4_binary_tree_search}
+    	%\begin{algorithmic}[1]
+    		%\REQUIRE 二叉树型搜索空间 $N=\left\{n_1,n_2,...,n_m\right\}$， 其中每个结点$n_x \in N$有其相应的属性: 范围$nr_x$ 和值$nv_x$
+    		%\ENSURE 搜索到的路径 $P=\left\{p_1,p_2,...,p_{(m-1)/2}\right\}$， 其中每条路径$p_{i} \in P$ 包含结点三元组$p_{i}=\left\{np_{i},nl_{i},nr_{i}\right\}$
 
-          \STATE 初始化: $idx=0$
-          \FOR{$i=1$ to $(m-1)/2$}
+          %\STATE 初始化: $idx=0$
+          %\FOR{$i=1$ to $(m-1)/2$}
 
-          \FOR{$j=1$ to $m$}
-          \IF{$nv_j$ == $leastPositive(NV)$}
-          \STATE $np_i = n_j, nv_j = 0, idx = j$
-          \ENDIF
+          %\FOR{$j=1$ to $m$}
+          %\IF{$nv_j$ == $leastPositive(NV)$}
+          %\STATE $np_i = n_j, nv_j = 0, idx = j$
+          %\ENDIF
 
-          \IF{$nr_j[1]$ == $nr_{idx}[1]$ and $nv_j$ == $0$}
-          \STATE $nl_i = n_j, nv_j = -1$
-          \ENDIF
+         % \IF{$nr_j[1]$ == $nr_{idx}[1]$ and $nv_j$ == $0$}
+         % \STATE $nl_i = n_j, nv_j = -1$
+         % \ENDIF
 
-          \IF{$nr_j[2]$ == $nr_{idx}[2]$ and $nv_j$ == $0$}
-          \STATE $nr_i = n_j, nv_j = -1$
-          \ENDIF
+         % \IF{$nr_j[2]$ == $nr_{idx}[2]$ and $nv_j$ == $0$}
+          %\STATE $nr_i = n_j, nv_j = -1$
+          %\ENDIF
 
-          \ENDFOR
+          %\ENDFOR
 
-          \STATE $p_{i}$ = $\left\{ np_{i},nl_{i},nr_{i} \right\}$
+          %\STATE $p_{i}$ = $\left\{ %np_{i},nl_{i},nr_{i} \right\}$
 
-          \ENDFOR
-    	  \end{algorithmic}
-        \end{algorithm}
+          %\ENDFOR
+    	  %\end{algorithmic}
+        %\end{algorithm}
 
-        算法\ref{alg:c4_binary_tree_search} 的具体过程如下所述：根据二叉树的性质，如果二叉树$N$ 中存在$m$ 个结点，那么算法\ref{alg:c4_binary_tree_search} 就要迭代执行$(m-2)/2$ 次。在第$i$次迭代中：首先将具有最小正数值$nv_j \in NV$ 的结点$n_j \in N$，赋予路径三元组中的父亲结点$np_i$，并将$nv_j$ 设为0，从而使结点$n_j$转换为叶子结点；然后在二叉树$N$ 中寻找能赋予路径三元组中左子结点$nl_i$ 的1 个结点$n_x$，该结点必须满足下述条件：$n_x$的范围的左边界$nr_x$[1] 须和$n_j$ 的范围的左边界$nr_j$[1] 相等，且其值$nv_x$ 须为0。 那么找到满足要求的结点$n_x$，并将其赋予$nl_i$。 紧接着将该结点的值$nv_x$ 设为-1，这意味着结点$n_x$ 已被标注为``已处理''，也就是说结点$n_x$ 不会在算法的下一轮迭代中被考虑；类似地，搜索到$n_t$并将其赋予路径三元组中的右子结点$nr_i$，然后将$n_t$ 的值改为-1。
+        \begin{figure*}[!h]
+        \centering
+        \includegraphics[width=\textwidth]{c4_algori_bts.jpg}
+        \caption{文本行的局部迭代优化算法} \label{fig.c4_algori_bts}
+        \end{figure*}
 
-        以上过程是算法\ref{alg:c4_binary_tree_search} 的第i 次迭代。那么经过$(m-1)/2$次迭代后，包含$(m-1)/2$ 个三元组$p$的路径集合$P$ 就被构建了出来。
+        算法4的具体过程如下所述：根据二叉树的性质，如果二叉树$N$ 中存在$m$ 个结点，那么算法就要迭代执行$(m-2)/2$ 次。在第$i$次迭代中：首先将具有最小正数值$nv_j \in NV$ 的结点$n_j \in N$，赋予路径三元组中的父亲结点$np_i$，并将$nv_j$ 设为0，从而使结点$n_j$转换为叶子结点；然后在二叉树$N$ 中寻找能赋予路径三元组中左子结点$nl_i$ 的1 个结点$n_x$，该结点必须满足下述条件：$n_x$的范围的左边界$nr_x$[1] 须和$n_j$ 的范围的左边界$nr_j$[1] 相等，且其值$nv_x$ 须为0。 那么找到满足要求的结点$n_x$，并将其赋予$nl_i$。 紧接着将该结点的值$nv_x$ 设为-1，这意味着结点$n_x$ 已被标注为``已处理''，也就是说结点$n_x$ 不会在算法的下一轮迭代中被考虑；类似地，搜索到$n_t$并将其赋予路径三元组中的右子结点$nr_i$，然后将$n_t$ 的值改为-1。
+
+        以上过程是算法4的第i次迭代。那么经过$(m-1)/2$次迭代后，包含$(m-1)/2$ 个三元组$p$的路径集合$P$ 就被构建了出来。
 
         \begin{figure*}[!h]
         \centering
@@ -284,7 +306,7 @@
         \label{fig.c4_bianry_tree_search}
         \end{figure*}
 
-        为了更直观地理解算法\ref{alg:c4_binary_tree_search}：从二叉树型搜索空间中找到最优路径的算法，这里用图\ref{fig.c4_bianry_tree_search} 所示的例子加以阐述。首先图\ref{fig.c4_bianry_tree_search}(a) 中的表格存储的是代表候选文本行搜索空间的二叉树$N$，且在这个例子中，$N$含有7 个结点；然后采用算法\ref{alg:c4_build_binary_tree} 在$N$ 上进行搜索，算法将会执行$(7-1)/2=3$ 次迭代，每次迭代的具体过程如图\ref{fig.c4_bianry_tree_search}(b) 所示；最后，算法的每次迭代，都会生成1 个对应的结点三元组。那么经历3 次迭代后，就会得到如图\ref{fig.c4_bianry_tree_search}(c) 所示的路径集合，即为算法\ref{alg:c4_binary_tree_search} 的搜索结果。
+        为了更直观地理解算法4：从二叉树型搜索空间中找到最优路径的算法，这里用图\ref{fig.c4_bianry_tree_search} 所示的例子加以阐述。首先图\ref{fig.c4_bianry_tree_search}(a) 中的表格存储的是代表候选文本行搜索空间的二叉树$N$，且在这个例子中，$N$含有7 个结点；然后采用算法4在$N$ 上进行搜索，算法将会执行$(7-1)/2=3$ 次迭代，每次迭代的具体过程如图\ref{fig.c4_bianry_tree_search}(b) 所示；最后，算法的每次迭代，都会生成1 个对应的结点三元组。那么经历3 次迭代后，就会得到如图\ref{fig.c4_bianry_tree_search}(c) 所示的路径集合，即为算法4的搜索结果。
 
         \subsection{搜索策略}
         \esubsection{Searching strategies}
@@ -403,7 +425,7 @@
 
         在第\ref{sec.c4_searching strategies} 节基于二叉树搜索的文本行优化的搜索策略中，我们详细探讨过自然场景文字检测与识别之间的紧密关系。其中，依据文字识别的成绩，文字检测的结果才能更准确的定位到文本行的位置。而反过来，更准确的文字检测结果，也会进一步的增强文字识别的精度。
 
-        因此，我们也将本章提出的方法与其他方法在各场景文字图片数据集上做了识别成绩的对比实验，如表\ref{tab.c4_recognition} 所示。在所有的数据集上，本章提出的方法的端对端识别成绩都高于其它所有方法。在SVT-50 数据集上，由Jaderberg\cite{Jaderberg2016Reading} 提出的端对端识别模型获得了P/R/F(查准/查全/F值)分别为0.85/0.68/0.76的识别分数，而本章方法在这个成绩基础上继续提升5\%从而达到0.86/0.67/0.77的识别成绩。同样在IC03 的各种词典配置的数据集上(IC03-50，IC03-FULL 和 IC03)，本章方法相对于其它先进方法对F 值的提升均在2\%左右，最终达到P/R/F分别为0.96/0.87/0.92的识别分数。
+        因此，我们也将本章提出的方法与其他方法在各场景文字图片数据集上做了识别成绩的对比实验，如表\ref{tab.c4_recognition} 所示。在所有的数据集上，本章提出的方法的端对端识别成绩都高于其它所有方法。在SVT-50 数据集上，由Jaderberg\cite{Jaderberg2016Reading} 提出的端对端识别模型获得了P/R/F(查准/查全/F值)分别为0.85/0.68/0.76的识别分数，而本章方法在这个成绩基础上继续提升5\%从而达到0.86/0.67/0.77 的识别成绩。同样在IC03 的各种词典配置的数据集上(IC03-50，IC03-FULL 和 IC03)，本章方法相对于其它先进方法对F 值的提升均在2\%左右，最终达到P/R/F分别为0.96/0.87/0.92的识别分数。
 
         \begin{table*}[!h]
         %\small

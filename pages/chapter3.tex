@@ -154,7 +154,7 @@
         \esubsection{Text adhesion-junctions' detection and cutting}
         \label{sec.c3_skeleton_cut}
 
-        生成边缘骨架图后，就可以通过8 连通区域的像素点数分析来检测边缘骨架粘连点。检测边缘骨架粘连点$J$ 的公式如公式\ref{eq:c3_junctions}所示：
+        生成边缘骨架图后，就可以通过8 连通区域的像素点数分析来检测边缘骨架粘连点。检测边缘骨架粘连点$J$ 的公式如公式\ref{eq:c3_junctions} 所示：
 
         \begin{equation}
         J=\left\{ p|n(p)=\sum_{k=1}^8x_k>t \right\},
@@ -282,31 +282,39 @@
     \section{文本行的局部迭代优化}
     \esection{Text line's iteratively local refinement}
 
-    本文上述所提出的基于边缘骨架切割的检测方法和2 阶段分类判别方法可以获得较高的文字检测查全率，但是文字检测结果同真实结果值(ground truth)之间的重叠率还是不满足期望。为了达到文字检测过程中的紧凑性(compactness) 标准，本文通过下面的算法\ref{alg:c3_iter_local_refine} 来调整文字检测包围框，使其更靠近文字的真实位置：
+    本文上述所提出的基于边缘骨架切割的检测方法和2 阶段分类判别方法可以获得较高的文字检测查全率，但是文字检测结果同真实结果值(ground truth)之间的重叠率还是不满足期望。为了达到文字检测过程中的紧凑性(compactness) 标准，本文通过如图\ref{fig.c3_algori_ilr}所示的算法1来调整文字检测包围框，使其更靠近文字的真实位置：
 
-    \qquad \qquad \qquad \qquad 算法1 文本行的局部迭代优化算法
-    
+    %下面的算法\ref{alg:c3_iter_local_refine} 来调整文字检测包围框，使其更靠近文字的真实位置：
 
-    \begin{algorithm}[!h] \renewcommand{\algorithmicrequire}{\textbf{输入：}}
-	\renewcommand{\algorithmicensure}{\textbf{输出：}}
-	\caption{文本行的局部迭代优化算法}
-	\label{alg:c3_iter_local_refine}
-	\begin{algorithmic}[1]
-		\REQUIRE 候选文字边缘骨架的包围框集合 $B$, 以及求取的MSER 集合 $M$
-		\ENSURE 经过局部迭代优化操作，对定位调整后的包围框集合 $R$
-		\STATE 将MSER集合$M$按照位置分成2 类：强MSER 子集合$S$，是指包含在$B$ 边界内部的MSER 集合；弱MSER 子集合$W$ ，是指位于$B$ 边界之外的MSER 集合
-        \FOR {$b \in B$}
-        \STATE //本算法的目的是：在文本行方向上，将$b$ 调整为$b_{exp}$
-        \STATE 计算位于$b$中的MSER$S$ 的特征均值$ms$
-		\REPEAT
-        \STATE $ws:=\left\{ w \in W |\,ol(b_{exp},w)>T_{ol}, | yc_{ms}-yc_w|<T_{yc} \right\}$
-        \STATE $rs:=\left\{ w \in ws |\,Dist_{h,w,sw,c}(ms,w)<T_{h,w,sw,c} \right\}$
-        \STATE $S:=S\cup rs,W:=W / rs$
-        \UNTIL{$rs=\varnothing$}
-        \STATE $R:=B \cap S$
-        \ENDFOR
-	\end{algorithmic}
-    \end{algorithm}
+    %\qquad \qquad \qquad \qquad 算法1 文本行的局部迭代优化算法
+
+
+    %\begin{algorithm}[!h] \renewcommand{\algorithmicrequire}{\textbf{输入：}}
+	%\renewcommand{\algorithmicensure}{\textbf{输出：}}
+	%\caption{文本行的局部迭代优化算法}
+	%\label{alg:c3_iter_local_refine}
+	%\begin{algorithmic}[1]
+		%\REQUIRE 候选文字边缘骨架的包围框集合 $B$, 以及求取的MSER 集合 $M$
+		%\ENSURE 经过局部迭代优化操作，对定位调整后的包围框集合 $R$
+		%\STATE 将MSER集合$M$按照位置分成2 类：强MSER 子集合$S$，是指包含在$B$ 边界内部的MSER 集合；弱MSER 子集合$W$ ，是指位于$B$ 边界之外的MSER 集合
+       % \FOR {$b \in B$}
+        %\STATE //本算法的目的是：在文本行方向上，将$b$ 调整为$b_{exp}$
+        %\STATE 计算位于$b$中的MSER$S$ 的特征均值$ms$
+		%\REPEAT
+       % \STATE $ws:=\left\{ w \in W |\,ol(b_{exp},w)>T_{ol}, | yc_{ms}-yc_w|<T_{yc} \right\}$
+       % \STATE $rs:=\left\{ w \in ws |\,Dist_{h,w,sw,c}(ms,w)<T_{h,w,sw,c} \right\}$
+       % \STATE $S:=S\cup rs,W:=W / rs$
+       % \UNTIL{$rs=\varnothing$}
+       % \STATE $R:=B \cap S$
+        %\ENDFOR
+	%\end{algorithmic}
+   % \end{algorithm}
+
+   \begin{figure*}[!h]
+   \centering
+   \includegraphics[width=\textwidth]{c3_algori_ilr.jpg}
+   \caption{文本行的局部迭代优化算法} \label{fig.c3_algori_ilr}
+   \end{figure*}
 
     其中，$Dist_f(s,w)$指的是$s_f$ 和$w_f$ 之间归一化的$L2$ 距离。而$f$ 是候选MSER 的特征，这些特征包含：$sw$ 是笔划宽度，$c$ 是HSV 和灰度的颜色通道，$h,w$ 是候选MSER 的高度和宽度；$yc$ 是候选MSER 在y 坐标轴上的中心坐标；另外函数$ol$用以计算2 个候选MSER 的包围框之间的重叠率；而$T$ 是经过实验计算得出的经验阈值。
 
@@ -326,7 +334,7 @@
 
         为了验证本章提出的文字检测子的效果，将该检测子运行在自然场景文字测试集ICDAR 2013 上。这个测试集合包含462 张标注的自然场景文字图片，其中有229 张图片用以训练，而233 张图片用于测试。该测试集合非常具有挑战性：因为图片存在光照不均、尺度不同(尺度范围从$459 \times 405$ 到$3888 \times 2592$) 的问题，而且文字也存在不同字体和颜色的问题。此外还利用了MSRA-TD500 测试数据集来验证本方法在多方向和多语种文字图像样本上的检测效果。最终使用Wolf 等\cite{Wolf2006Object} 提出的评价标准来验证本方法的文字检测结果。评价标准利用到了查全（recall），查准（precision） 和f 值等概念，这些概念来源于信息检索领域(Information Retrieval,IR)。
 
-        其中查全率（recall）代表的含义是真值（ground truth）中的东西被提取出来的比例，如公式\ref{eq.c3_R}所示：
+        其中查全率（recall）代表的含义是真值（ground truth）中的东西被提取出来的比例，如公式\ref{eq.c3_R} 所示：
         \begin{equation}
         recall=\frac{N.o. \quad True Positives}{N.o. \quad Ground truth}
         \label{eq.c3_R}
@@ -355,7 +363,7 @@
         \label{fig.c3_evalu_bbox_match}
         \end{figure*}
 
-        其中ICDAR2003数据集采用的就是1对1的匹配方式\cite{Mariano2002Performance}，这种匹配方式最为简洁，其计算过程如公式\ref{eq.c3_match_1v1} 所示：都使用了BestMatch 来计算查全率和查准率。
+        其中ICDAR2003数据集采用的就是1对1 的匹配方式\cite{Mariano2002Performance}，这种匹配方式最为简洁，其计算过程如公式\ref{eq.c3_match_1v1} 所示：都使用了BestMatch 来计算查全率和查准率。
         \begin{equation}
         \left\{
         \begin{array}{c}
@@ -382,20 +390,20 @@
         \sigma_{ij}=R(G_i,D_j),\tau_{ij}=P(G_i,D_j)
         \label{eq.c3_overlap_matrices}
         \end{equation}
-        这两个矩阵被称为重合矩阵（overlap matrices），若$G_i$与$D_j$之间存在重合那么在重合矩阵的第i 行、第j 列上的元素即为大于0的数值。而当满足条件\ref{eq.c3_T}时，真实文字区域$G_i$ 与检测到的文字区域$D_j$ 就是匹配的。
+        这两个矩阵被称为重合矩阵（overlap matrices），若$G_i$与$D_j$之间存在重合那么在重合矩阵的第i 行、第j 列上的元素即为大于0的数值。而当满足条件\ref{eq.c3_T} 时，真实文字区域$G_i$ 与检测到的文字区域$D_j$ 就是匹配的。
         \begin{equation}
         \sigma_{ij}>t_r,\tau_{ij}>t_p
         \label{eq.c3_T}
         \end{equation}
         其中$t_r$和$t_p$分别是$\sigma_{ij}$和$\tau_{ij}$的阈值，且$t_r,t_p \in [0,1]$。则在新的测评方法中，三种匹配方式有以下定义：
 
-        1）一个真实区域$G_i$只和1个检测区域$D_j$ 匹配，也就是1对1的匹配。这种匹配方式要满足的条件是：$G_i$的大部分只能被$D_j$检测出来，即$\sigma_{ij} \ge t_r$；且只有$D_j$对$G_i$的查准率符合要求，即$\tau_{ij} \ge t_p$。
+        1）一个真实区域$G_i$只和1个检测区域$D_j$ 匹配，也就是1对1的匹配。这种匹配方式要满足的条件是：$G_i$ 的大部分只能被$D_j$检测出来，即$\sigma_{ij} \ge t_r$；且只有$D_j$对$G_i$的查准率符合要求，即$\tau_{ij} \ge t_p$。
 
-        2）一个真实区域$G_i$被检测区域集合D的子集$D_o$ 检测到了，也就是1对多的匹配。该匹配满足的条件有：$D_o$中的每个区域都能检出$G_i$的部分，即$\tau_{ij} \ge t_p,\forall j \in D_o$；并且$S_o$ 能检测到$G_i$的大部分，即$\sum_{j \in S_o} \sigma_{ij} \ge t_r$。
+        2）一个真实区域$G_i$被检测区域集合D的子集$D_o$ 检测到了，也就是1 对多的匹配。该匹配满足的条件有：$D_o$中的每个区域都能检出$G_i$的部分，即$\tau_{ij} \ge t_p,\forall j \in D_o$；并且$S_o$ 能检测到$G_i$的大部分，即$\sum_{j \in S_o} \sigma_{ij} \ge t_r$。
 
         3）一个算法检测到的区域$D_j$与真实区域集合G的子集$G_o$匹配，即多对1的匹配。满足条件为：$G_o$中的每个区域都有一部分能被检测到，即$\sigma_{ij} \ge t_r,\forall i \in G_o$；而且$D_j$也以一定的精度检测到了$G_o$，也就是$\sum_{i \in G_o} \tau_{ij} \ge t_p$。
 
-        根据上述规则，就可以定义在不同类型匹配情况下的匹配度$Match_G(G_i,D,t_r,t_p)$以及$Match_D(D_j,G,t_r,t_p)$，并得到最终的测评指标$R(G,D,t_r,t_p)$和$P(G,D,t_r,t_p)$，如公式\ref{eq.c3_R_P}所示。
+        根据上述规则，就可以定义在不同类型匹配情况下的匹配度$Match_G(G_i,D,t_r,t_p)$以及$Match_D(D_j,G,t_r,t_p)$，并得到最终的测评指标$R(G,D,t_r,t_p)$和$P(G,D,t_r,t_p)$，如公式\ref{eq.c3_R_P} 所示。
         \begin{equation}
         \left\{
         \begin{array}{c}
