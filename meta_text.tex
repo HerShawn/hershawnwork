@@ -36,7 +36,7 @@
 
 % 关键词，中文。用全角分号「；」分割
 % 研究生的应首先从《汉语主题词表》中摘选
-\ckeywords{自然场景文字检测；文字边缘骨架检测子；统计边缘响应；基于二叉树搜索的文本行定位优化}
+\ckeywords{自然场景文字检测；文字边缘骨架检测子；统计边缘响应；基于二叉树搜索的文本行定位矫正}
 
 % 提交日期，本科生不需要
 \cproddate{\the\year 年\the\month 月}
@@ -47,7 +47,7 @@
 
 
 % 论文标题，英文
-\etitle{Scene text detection based on skeleton-cut detector and text line rectification}
+\etitle{Scene text detection based on skeleton-cut text detector and text line location rectification}
 
 % 作者姓名，英文
 \eauthor{Xiang He }
@@ -59,7 +59,7 @@
 \esupervisor{Senior Engineer Yonghong Song }
 
 % 关键词，英文。用半角分号和一个半角空格「; 」 分割
-\ekeywords{Scene text detection; Skeleton-cut text detector; Static skeleton-box response; Text line rectification by binary-tree-search}
+\ekeywords{Scene text detection; Skeleton-cut text detector; Static edge response; Text line location rectification by binary-tree-search}
 
 % 学科门类，英文
 % 从Philosophy（哲学）、Economics （经济学）、Law （法学）、Education （教育学）、Arts（文学）、
@@ -98,12 +98,12 @@
 
 %Text in natural scene is an image symbol that can store and record semantic information. It plays an important role in every aspect of daily life. Scene text detection is a hot research topic in the field of object detection, which can be widely applied to content based retrieval, intelligent unmanned platform, auxiliary blind system, industrial automation and other artificial intelligence applications. But precisely detecting the text is a challenging task in the scene image because of the following difficulties: Occlusion, shadows and low contrast conditions in complex natural scenes; Text's various orientation, size, color, font and language; Image' degradation and distortion. In this paper, we first investigated and analyzed the existing methods, and then proposed the following two effective methods:
 
-Scene text detection is a challenging task because of the following difficulties: Occlusion, shadows and low contrast conditions in complex natural scenes; Text's various orientation, size, color, font and language; Image' degradation and distortion. In this thesis, the existing methods are investigated and analyzed first, and then the following two effective methods are proposed.
+Scene text detection is a challenging task because of the following difficulties: Occlusion, shadows and low contrast conditions in complex natural scenes; Text's various orientation, size, color, font and language; Image' degradation and distortion. In this thesis, the existing methods are investigated and analyzed first, and then the following two methods are proposed.
 
 Firstly, the skeleton-cut method is proposed to solve the edge-adhesion problem. Structured edge detection method is applied to get the edge response, and the skeleton map is obtained by the thinning operation, then the skeleton-junctions are found through the analysis of the 8 neighborhoods algorithm. Skeleton-junctions are disconnected to get the candidate text skeletons, and then most of the non-text skeletons are filtered. The remaining undistinguishable non-text skeletons can be further filtered through CNN-based classifier. Finally, based on the non maximum suppression and the text lines aggregation operation, the text location results are obtained.
 
  A text line rectification method based on binary tree search is proposed to locate the text more accurately . First the static skeleton-box response is calculated form the candidate text bounding boxes , and then the candidate text lines are obtained form the response by horizontal projection, gradient and non maximum suppression operation. Finally, the binary-tree-based search space is built from candidate text lines, and the optimal result is found from the search space according to the optimization strategy.
 
-The two methods proposed in this thesis are compared with the related methods on ICDAR2011, ICDAR2013 and MSRA-TD500 test set respectively, and the experimental results prove the robustness of our methods. In addition, this paper also get the results of the proposed methods on the more challenging SVT dataset, which proves the practicability and reliability of the algorithm.
+The two methods proposed in this thesis are compared with the related methods on ICDAR2011, ICDAR2013 and MSRA-TD500 test set, and the experimental results prove the robustness of our methods. In addition, this paper also get the results of the proposed methods on the more challenging SVT dataset, which proves the practicability and reliability of the algorithm.
 
 }
