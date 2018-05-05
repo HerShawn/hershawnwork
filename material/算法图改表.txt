@@ -1,0 +1,114 @@
+    
+--------------------------------------------------------------------------------------------------------------------
+    
+    \begin{table}[!h]
+    \renewcommand\arraystretch{1.5}
+    \centering
+    \caption{文本行的局部迭代优化算法}
+    \begin{tabular}{p{0.95\columnwidth}}
+    \toprule
+    \textbf{输入：} 候选文字边缘骨架的包围框集合 $B$, 以及求取的MSER 集合 $M$\\
+    \textbf{输出：} 经过局部迭代优化操作，对定位调整后的包围框集合 $R$\\
+    \midrule
+     将MSER集合$M$按照位置分成2 类：强MSER 子集合$S$，是指包含在$B$ 边界内部的MSER 集合；弱MSER 子集合$W$ ，是指位于$B$ 边界之外的MSER 集合\\
+     \textbf{for} {$b \in B$}\\
+    \qquad //本算法的目的是：在文本行方向上，将$b$ 调整为$b_{exp}$ \\
+    \qquad 计算位于$b$中的MSER$S$ 的特征均值$ms$\\
+    \qquad \textbf{repeat}\\
+    \qquad \qquad $ws:=\left\{ w \in W |\,ol(b_{exp},w)>T_{ol}, | yc_{ms}-yc_w|<T_{yc} \right\}$ \\
+    \qquad \qquad $rs:=\left\{ w \in ws |\,Dist_{h,w,sw,c}(ms,w)<T_{h,w,sw,c} \right\}$ \\
+    \qquad \qquad $S:=S\cup rs,W:=W / rs$\\
+    \qquad \textbf{until} $rs=\varnothing$ \\
+    \qquad $R:=B \cap S$ \\
+    \textbf{end for} \\
+    \bottomrule
+    \label{tab.c3_algori_ilr}
+    \end{tabular}
+    \end{table}
+
+--------------------------------------------------------------------------------------------------------------------
+
+    \begin{table}[!h]
+    \renewcommand\arraystretch{1.5}
+    \centering
+    \caption{统计边缘响应}
+    \begin{tabular}{p{0.95\columnwidth}}
+    \toprule
+    \textbf{输入：} 输入的场景文字图像$g$\\
+    \textbf{输出：} 图$g$相对应的统计边缘响应$s$\\
+    \midrule
+     在图$g$上利用基于边缘骨架切割的文字检测子得到粗略的定位结果：文字定位包围框集合$B$ 及其相应的置信度分数集合$C$\\
+     \textbf{repeat} \\
+    \qquad \qquad $rs:=\left\{ b \times c  |\,b \in B, c \in C\right\}$ \\
+    \qquad \qquad  $s:=s\cup rs,B:=B / b,C:=C / c$ \\
+    \textbf{until} $B=\varnothing$ \\
+    \bottomrule
+    \label{tab.c4_ser}
+    \end{tabular}
+    \end{table}
+
+--------------------------------------------------------------------------------------------------------------------
+
+    \begin{table}[!h]
+    \renewcommand\arraystretch{1.5}
+    \centering
+    \caption{递归地建立二叉树型搜索空间}
+    \begin{tabular}{p{0.95\columnwidth}}
+    \toprule
+    \textbf{输入：} 分割线 $L$ 的距离 $LD=\left\{ld_1,ld_2,...,ld_m\right\}$ 和置信度$LC=\left\{lc_1,lc_2,...,lc_m\right\}$\\
+    \textbf{输出：} 二叉树型搜索空间 $N$ 的结点范围 $NR=\left\{nr_1,nr_2,...,nr_{2m-3}\right\}$, 和结点的值 $NV=\left\{nv_1,nv_2,...,nv_{2m-3}\right\}$\\
+    \midrule
+    \textbf{初始化：}\\
+    \qquad $i=0, \quad BuildBinaryTree(i,LD,LC)$\\
+    \textbf{function} $BuildBinaryTree(i,LD,LC)$\\
+    \qquad $i=i+1$ \\
+    \qquad $\textbf{if} \quad length(LD)==2 \quad \textbf{then}$ \\
+    \qquad \qquad $nr_{i}=[LD[1],LD[2]], nv_{i}=0$ \\
+    \qquad \qquad \textbf{return} \\
+    \qquad $\textbf{end if}$ \\
+    \qquad $nr_{i}=[LD[1],LD[end]], nv_{i}=max(LC)$ \\
+    \qquad $//$假设$LC$中的最大值是$lc_t$，其中$t$ 是$lc_t$ 的索引 \\
+    \qquad $//$在索引$t$处将$L$ 分裂成左子集和右子集 \\
+    \qquad $LD_{l}=\left\{LD[1],...,LD[t]\right\}, LC_{l}=\left\{LC[1],...,LC[t]\right\}$\\
+    \qquad $BuildBinaryTree(i,LD_{l},LC_{l})$ \\
+    \qquad $LD_{r}=\left\{LD[t],...,LD[end]\right\}, LC_{r}=\left\{LC[t],...,LC[end]\right\}$ \\
+    \qquad $BuildBinaryTree(i,LD_{r},LC_{r})$ \\
+    \textbf{end function}\\
+
+    \bottomrule
+    \label{tab.c4_build_binary_tree}
+    \end{tabular}
+    \end{table}
+
+--------------------------------------------------------------------------------------------------------------------
+
+    \begin{table}[!h]
+    \renewcommand\arraystretch{1.5}
+    \centering
+    \caption{从二叉树型搜索空间中找到最优路径}
+    \begin{tabular}{p{0.95\columnwidth}}
+    \toprule
+    \textbf{输入：} 二叉树型搜索空间 $N=\left\{n_1,n_2,...,n_m\right\}$， 其中每个结点$n_x \in N$ 有其相应的属性: 范围$nr_x$ 和值$nv_x$ \\
+    \textbf{输出：} 搜索到的路径 $P=\left\{p_1,p_2,...,p_{(m-1)/2}\right\}$， 其中每条路径$p_{i} \in P$ 包含结点三元组$p_{i}=\left\{np_{i},nl_{i},nr_{i}\right\}$ \\ 
+    \midrule
+    \textbf{初始化：} $idx = 0$\\
+    \textbf{for} $i=1$ to $(m-1)/2$ \textbf{do} \\
+    \qquad \textbf{for} $j=1$ to $m$ \textbf{do} \\
+    \qquad \qquad \textbf{if} $nv_j$ == $leastPositive(NV)$ \textbf{then} \\
+    \qquad \qquad \qquad $np_i = n_j, nv_j = 0, idx = j$ \\
+    \qquad \qquad \textbf{end if} \\
+    \qquad \qquad \textbf{if} $nr_j[1]$ == $nr_{idx}[1]$ and $nv_j$ == $0$ \textbf{then} \\
+    \qquad \qquad \qquad $nl_i = n_j, nv_j = -1$ \\
+    \qquad \qquad \textbf{end if} \\
+    \qquad \qquad \textbf{if} $nr_j[2]$ == $nr_{idx}[2]$ and $nv_j$ == $0$ \textbf{then} \\
+    \qquad \qquad \qquad $nr_i = n_j, nv_j = -1$ \\
+    \qquad \qquad \textbf{end if} \\
+    \qquad \textbf{end for} \\
+    \qquad $p_{i}$ = $\left\{ np_{i},nl_{i},nr_{i} \right\}$ \\
+    \textbf{end for} \\
+    \bottomrule
+    \label{tab.c4_algori_bts}
+    \end{tabular}
+    \end{table}
+
+--------------------------------------------------------------------------------------------------------------------

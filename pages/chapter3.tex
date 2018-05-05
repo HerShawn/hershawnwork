@@ -283,7 +283,7 @@
     \esection{Text line's iteratively local refinement}
 
     本文上述所提出的基于边缘骨架切割的检测方法和2 阶段分类判别方法可以获得较高的文字检测查全率，但是文字检测结果同真实结果值(ground truth)之间的重叠率还是不满足期望。为了达到文字检测过程中的紧凑性(compactness) 标准，本文通过如表\ref{tab.c3_algori_ilr}所示的算法来调整文字检测包围框，使其更靠近文字的真实位置：
-        
+
     \begin{table}[!h]
     \renewcommand\arraystretch{1.5}
     \centering
@@ -308,7 +308,7 @@
     \label{tab.c3_algori_ilr}
     \end{tabular}
     \end{table}
-    
+
     其中，$Dist_f(s,w)$指的是$s_f$ 和$w_f$ 之间归一化的$L2$ 距离。而$f$ 是候选MSER 的特征，这些特征包含：$sw$ 是笔划宽度，$c$ 是HSV 和灰度的颜色通道，$h,w$ 是候选MSER 的高度和宽度；$yc$ 是候选MSER 在y 坐标轴上的中心坐标；另外函数$ol$用以计算2 个候选MSER 的包围框之间的重叠率；而$T$ 是经过实验计算得出的经验阈值。
 
     \begin{figure*}[!h]
@@ -327,21 +327,27 @@
 
         为了验证本章提出的文字检测子的效果，将该检测子运行在自然场景文字测试集ICDAR 2013 上。这个测试集合包含462 张标注的自然场景文字图片，其中有229 张图片用以训练，而233 张图片用于测试。该测试集合非常具有挑战性：因为图片存在光照不均、尺度不同(尺度范围从$459 \times 405$ 到$3888 \times 2592$) 的问题，而且文字也存在不同字体和颜色的问题。此外还利用了MSRA-TD500 测试数据集来验证本方法在多方向和多语种文字图像样本上的检测效果。最终使用Wolf 等\cite{Wolf2006Object} 提出的评价标准来验证本方法的文字检测结果。评价标准利用到了查全（recall），查准（precision） 和f 值等概念，这些概念来源于信息检索领域(Information Retrieval,IR)。
 
-        其中查全率（recall）代表的含义是真值（ground truth）中的东西被提取出来的比例，如公式\ref{eq.c3_R} 所示：
+        其中查全率（recall）代表的含义是真值（ground truth）中的东西被提取出来的比例，如公式\ref{eq.c3_R} 所示。
+
         \begin{equation}
         recall=\frac{N.o. \quad True Positives}{N.o. \quad Ground truth}
         \label{eq.c3_R}
         \end{equation}
-        而查准（precision）表示检测到的东西是正确的比例，如公式\ref{eq.c3_P}所示：
+
+        而查准（precision）表示检测到的东西是正确的比例，如公式\ref{eq.c3_P}所示。
+
         \begin{equation}
         precision=\frac{N.o. \quad True Positives}{N.o. \quad Retrieved Items}
         \label{eq.c3_P}
         \end{equation}
-        其中，符号N.o是数量Number of 的首字母缩写。最后综合指标F-mean （也可记为F-score）是查全（recall）和查准（precision）的调和平均数（Harmonic mean）,该指标用以衡量算法的综合性能，如公式\ref{eq.c3_F}所示：
+
+        其中，符号N.o是数量Number of 的首字母缩写。最后综合指标F-mean （也可记为F-score）是查全（recall）和查准（precision）的调和平均数（Harmonic mean）,该指标用以衡量算法的综合性能，如公式\ref{eq.c3_F}所示。
+
         \begin{equation}
         F=\frac{2}{\frac{1}{recall}+\frac{1}{precision}}=\frac{2recall*precsion}{recall+precision}
         \label{eq.c3_F}
         \end{equation}
+
         文字检测算法也会引入查全和查准来衡量算法性能，但存在3 项复杂性：
 
         1）文字或目标检测与信息检索（IR）的不同：设文字检测方法结果和真值（ground truth）中的定位包围盒（bounding box）分别用$D_i$ 和$G_j$ 表示，那么就判断$D_i$ 是否为true positive而言，文字检测要比信息检索(IR)更为困难。这是因为在文字检测中，存在1个$D_i$ 和多个$G_j$ 匹配的情况，因此其用作正确性判断的匹配方法是soft （匹配值是由0 到1 之间的1 个分数）和非一对一的匹配。
@@ -414,16 +420,17 @@
         如表\ref{tab.c3_icdar13}所示，本章提出的方法在ICDAR 2013 测试数据集上取得了86.79\%的查准率和76.21\%的查全率。该方法的查全率超过了其它所有的检测方法的查全率，这得益于文字边缘骨架提取方法的良好设计。同时本文提出了2 阶段非文字过滤以及文本行的局部迭代优化策略，以确保本方法的高查准结果。值得一提的是，本方法没有使用传统的图像金字塔上的多尺度滑动窗进行文字与背景的二分类，而是采用文字边缘骨架提取加单尺度的CNN 分类判断，因此在保证检测成绩的同时，大幅缩减了计算量和用时。另外，在提出的方法中融入文本行的局部迭代优化(Iteratively Local Refinement，简称ILR)，可以进一步将检测F 值提升3.3\%，并超越其它所有先进的文字检测方法。
 
         \begin{table*}[!h]
+        %\renewcommand\arraystretch{1.5}
         %\small
         \centering
         \caption{在ICDAR 2013上的文字检测效果(\%)}
-        \begin{tabular}{p{0.25\textwidth} p{0.25\textwidth} p{0.25\textwidth} p{0.13\textwidth}}
+        \begin{tabular}{p{0.27\textwidth} p{0.25\textwidth} p{0.25\textwidth} p{0.12\textwidth}}
         %\hline
         \toprule
         方法 & 查全R & 查准P & F值 \\
         %\hline
         \midrule
-        \textbf{Proposed} & \textbf{76.21} & \textbf{86.79} & \textbf{81.16}(+3.3) \\
+        \textbf{Proposed} & \textbf{76.21} & \textbf{86.79} & \textbf{81.16} \\
         %\textbf{Proposed} & \textbf{76.21} & \textbf{86.79} & \textbf{81.16} \\
         \textbf{Proposed} Without ILR & 73.28 & 84.80 & 77.83 \\
         %\hline
@@ -441,6 +448,7 @@
         表格\ref{tab.c3_icdar11}展示了本方法与若干先进方法在ICDAR 2011测试数据集上关于字符检出率的量化比较。ICDAR 2011测试数据集包含255 张自然场景图片，里面总共有6309 个字符。在进行对比的几种方法中，若对提取到的所有极值区域(Extremal Region，简称为ER) 都不判别而直接认定为字符，那么字符的检出率高达96\%。但这样的话提取的候选字符有6 百万之多，计算量过大，并且在这么多的候选字符中真正的字符更难被提取出来，因而查准率极低。如果采用Matas 等\cite{Matas2004Robust} 提出的最稳定极值区域(Maximally Stable Extremal Regions，简称为MSER)，则候选字符数目骤降到3 万个，计算量大幅下降，且查准率得到提升。但从检出率的指标来看，该方法的成绩也从96\% 减低到53\%，因此牺牲的是文字检测的查全效果。
 
         \begin{table*}[htbp]
+        %\renewcommand\arraystretch{1.5}
         %\small
         \centering
         \caption{在ICDAR 2011测试集上对于字符提取数目和检出率的测评}
@@ -471,6 +479,7 @@
         在候选字符数目与字符检出率的折衷方面做的较好的是Sung 等\cite{Sung2015Scene} 提出的方法。这个方法首先在提取极值区域ER 的初始阶段保证了89\% 的高检出率，同时候选字符的数目也维持在较低的水平。接着在后续阶段此方法继续大幅降低候选字符的数量直到9 万多个，而检出率也仅下降了2\% 而已。从结果上来看，Sung 的方法可以说既保证了文字检查的高查全率，同时还兼顾了检出文字的高水平查准效果。而本章提出的方法进一步加大了这种高查全兼顾高查准的优势：在使检出率高于Sung 的方法的同时，又使候选字符的数目相对于Sung 的方法降低了1 个量级。因此从在ICDAR 2011 测试集上的字符检测结果来说，本章提出方法优于其它先进的文字检测方法。
 
         \begin{table*}[!h]
+        %\renewcommand\arraystretch{1.5}
         %\small
         \centering
         \caption{ 本方法与其它文字检测方法在MSRA-TD500 测试数据集上的检测成绩对比}
